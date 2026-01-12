@@ -1,4 +1,4 @@
-const gctabi = [
+[
 	{
 		"inputs": [
 			{
@@ -458,10 +458,6 @@ const gctabi = [
 		],
 		"name": "URI",
 		"type": "event"
-	},
-	{
-		"stateMutability": "payable",
-		"type": "fallback"
 	},
 	{
 		"inputs": [
@@ -1029,6 +1025,4 @@ const gctabi = [
 		"stateMutability": "payable",
 		"type": "receive"
 	}
-];
-
-export default gctabi
+]
