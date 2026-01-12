@@ -74,7 +74,7 @@ contract GreenXchangeOrderbook is
         uint256 indexed orderIdTaker,
         address maker,
         address taker,
-        uint256 tokenId,
+        uint256 tokenId,npm
         uint256 price,
         uint256 amount
     );

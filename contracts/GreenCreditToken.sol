@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
+
 /// @title GreenCreditToken
 /// @notice ERC-1155 token for tokenized green credits (Green, Carbon, Water, Renewable)
 ///         Fully on-chain metadata via Base64-encoded JSON.
@@ -259,7 +260,5 @@ contract GreenCreditToken is ERC1155, Ownable {
         revert("No ETH");
     }
 
-    fallback() external payable {
-        revert("Unsupported");
-    }
+    
 }
