@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchCreditInfo } from '@/contexts/MintToken';
-import Link from 'next/link';
+import {useSearchParams} from "next/navigation"
 
 export default function VerificationPage() {
   const [tokenId, setTokenId] = useState('');
@@ -35,20 +35,29 @@ export default function VerificationPage() {
   //     description: 'This credit failed verification checks'
   //   }
   // };
+      const searchParams = useSearchParams()
+      const id = searchParams.get('tokenid')
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem('onboardingProject');
+
+      if(id){
+        setTokenId(id);
+          handleGetInfo(Number(id));
+      }
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && parsed.tokenId !== undefined && parsed.tokenId !== null) {
           setTokenId(String(parsed.tokenId));
         }
+       
       }
+
     } catch (e) {
       console.log('No previous project found');
     }
-  }, []);
+  }, [id]);
 
   const handleGetInfo = async () => {
     setError('');
