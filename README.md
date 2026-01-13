@@ -1,131 +1,264 @@
-# 🌿 GreenXchange
+# 🌿 GreenXAI
 
-GreenXchange is a decentralized **green-credits marketplace** enabling transparent trading of tokenized environmental assets.  
-It combines **ERC-1155 green credits**, an **upgradeable on-chain orderbook**, and **PYUSD stablecoin settlement** — all wrapped in a modern **Next.js + Ethers.js** frontend.
+**GreenXAI** is an on-chain platform for **registering, tokenizing, and trading real-world green credits** in a transparent, secure, and accessible way.
 
----
+It enables environmental projects to convert verified green credits into **ERC-1155 crypto assets**, trade them on-chain using **stablecoin settlement**, and optionally make them **DeFi-compatible** by converting them into **ERC-20 tokens tradable via a Uniswap V2–style AMM**.
 
-## 🚀 Overview
-
-GreenXchange bridges verified sustainability projects with real blockchain markets.
-
-- ♻️ Tokenized environmental credits (Green, Carbon, Water, Renewable)
-- ⚖️ Orderbook with on-chain escrow and upgradeable smart contracts
-- 💰 Settlement in PYUSD with configurable platform/referrer fees
-- 🌐 Fully decentralized and transparent credit lifecycle
+GreenXAI is designed to make **green credit markets more efficient, accessible, and trustable** for both small sustainability projects and large organizations.
 
 ---
 
-## 🧱 Core Components
+## 🌍 Problem Statement
 
-### 🌱 **GreenCreditToken (ERC-1155)**
-Implements verified green credit issuance with strict owner controls.
-- Register, approve, mint, freeze/unfreeze, revoke, and retire credits.
-- Tracks `totalSupply` and `totalRetired` per token.
-- Supports multiple credit types via enum.
-- Metadata managed via `baseURI` for off-chain storage (IPFS/metadata server).
+Traditional green credit markets face major structural limitations:
 
-### ⚖️ **GreenXchangeOrderbook (Upgradeable)**
-A UUPS-based orderbook that manages buy/sell orders in PYUSD.
-- Role-based access via `AccessControl` (`ADMIN`, `MANAGER`, `UPGRADER`)
-- Escrows PYUSD or ERC-1155 tokens during trades
-- Handles `placeOrder`, `fillOrder`, and `cancelOrder`
-- Automatic settlement, platform fees, and referrer rewards
-- Protected by `Pausable` and `ReentrancyGuard`
+- Centralized registries with low transparency  
+- Manual verification and settlement  
+- High entry barriers for small companies  
+- Poor liquidity and inefficient price discovery  
+- Limited global accessibility  
 
-### 💸 **PYUSD Integration**
-- Supports any ERC-20-compatible stablecoin
-- Default Sepolia PYUSD if `address(0)` is passed during initialization
-- Accurate decimals tracking for PYUSD math
-
----
-## 🧠 Tech Stack
-
-| Layer | Stack |
-|-------|-------|
-| Smart Contracts | Solidity, OpenZeppelin, UUPS |
-| Frontend | Next.js 14 (App Router), TailwindCSS |
-| Blockchain Interaction | Ethers.js |
-| Token Standards | ERC-1155 (GreenCreditToken), ERC-20 (PYUSD) |
-| Network | Ethereum Sepolia Testnet |
-
----
-## 🖥️ Frontend
-
-The frontend is built with **Next.js (App Router)** and **TailwindCSS**, with **Ethers.js** for blockchain interactions.
-
-Key features:
-- 🦊 Wallet connection via MetaMask (`window.ethereum`)
-- 📊 Real-time orderbook and portfolio view
-- 🪙 Place, fill, and cancel orders directly on-chain
-- ✅ Mint, retire, and manage green credits
-- ⚙️ Context-based contract management (`Orderbook`, `MintToken`, `Web3Context`)
+As a result, green credits remain **illiquid, opaque, and difficult to trade**, reducing their real-world environmental impact.
 
 ---
 
-## 📂 Project Structure (Simplified)
+## ✅ GreenXAI Solution
 
-```text
-pavantej-05-greenxchange/
-├── ABI/
-│   ├── GreenCreditTokenAbi.js
-│   └── GreenXchangeOrderbookAbi.js
-├── contracts/
-│   ├── GreenCreditToken.sol
-│   └── GreenXchangeOrderbook.sol
-└── frontend/
-    ├── package.json
-    ├── next.config.js
-    ├── tailwind.config.mjs
-    └── src/
-        ├── app/ (Next.js pages)
-        ├── components/ (UI + Web3)
-        ├── contexts/ (React state + contract logic)
-        └── utils/ (helpers, formatters, SDKs)
-```
+GreenXAI moves the **entire green credit lifecycle on-chain**, removing intermediaries and enabling open participation.
+
+### Core Benefits
+
+- **Transparency** – Credit issuance, supply, and retirement are publicly verifiable  
+- **Accessibility** – Anyone can buy or sell credits on-chain  
+- **Liquidity** – Credits can be traded instantly or via DeFi pools  
+- **Trust** – Smart contracts enforce rules instead of centralized entities  
+- **Low Cost** – Built on Mantle L2 for fast, low-fee transactions  
+
 ---
-## ⚙️ Getting Started
 
-### 1️⃣ Prerequisites
+## 🔄 End-to-End Credit Lifecycle
 
-Make sure you have:
-- Node.js v18+
-- npm or yarn
-- A MetaMask wallet connected to Sepolia testnet
+Real-World Green Credit
+↓
+On-chain Registration
+↓
+ERC-1155 Credit Token
+↓
+Buy / Sell On-chain
+↓
+(Optional) ERC-20 Wrapping
+↓
+AMM Trading (Uniswap-style)
+↓
+Retirement (On-chain Burn)
 
-### 2️⃣ Clone the Repository
+
+Each credit has **full on-chain traceability** from issuance to retirement.
+
+---
+
+## 🧠 AI Assistant Layer
+
+GreenXAI integrates an **AI-powered assistant** to improve usability and reduce user errors.
+
+### AI Capabilities
+
+- In-app chat guidance
+- Step-by-step explanations for:
+  - Buying and selling credits
+  - Token approvals
+  - ERC-1155 ↔ ERC-20 conversion
+  - Liquidity provision and swaps
+- Clear explanations of failed transactions
+- Risk-aware insights using on-chain data
+
+The AI operates in **read-only mode** and does not execute transactions.
+
+---
+
+## 📊 Swap Confidence Score
+
+Before executing a swap, users are shown a **Confidence Score (0–100)** based on real on-chain parameters:
+
+- Liquidity depth
+- Trade size relative to pool reserves
+- Expected price impact
+- User-defined slippage tolerance
+
+Example:
+
+Confidence Score: 76 / 100
+Liquidity: Strong
+Price Impact: Moderate
+Slippage Risk: Low
+
+yaml
+￼Copy code
+
+
+This helps users **understand trade quality before execution**.
+
+---
+
+## 🏗 System Architecture
+
+┌──────────────────────────────────────────┐
+│ Frontend │
+│ Next.js + Ethers.js + TailwindCSS │
+│ - Credit Registry UI │
+│ - Buy / Sell Credits │
+│ - Wrap / Unwrap Tokens │
+│ - Liquidity & Swap Interface │
+│ - AI Chat Assistant │
+└───────────────────────┬──────────────────┘
+│
+▼
+┌──────────────────────────────────────────┐
+│ AI Backend │
+│ - User guidance logic │
+│ - Confidence score calculation │
+│ - Read-only blockchain access │
+└───────────────────────┬──────────────────┘
+│
+▼
+┌──────────────────────────────────────────┐
+│ Mantle Sepolia (L2) │
+│ │
+│ ┌──────── ERC-1155 Credits ─────────┐ │
+│ │ GreenCreditToken │ │
+│ └──────────────┬────────────────────┘ │
+│ ▼ │
+│ ┌──────── ERC-20 Wrappers ───────────┐ │
+│ │ Wrapper Factory + Wrappers │ │
+│ └──────────────┬─────────────────────┘ │
+│ ▼ │
+│ ┌────────── AMM (Uniswap V2) ─────────┐│
+│ │ Factory • Pair • Router ││
+│ └──────────────┬──────────────────────┘│
+│ ▼ │
+│ ┌────────── Orderbook ────────────────┐│
+│ │ Stablecoin-settled credit trades ││
+│ └─────────────────────────────────────┘│
+└──────────────────────────────────────────┘
+
+
+---
+
+## 🧱 Core Protocol Components
+
+### 1️⃣ Green Credit Registry (ERC-1155)
+
+**Purpose**: Tokenize verified environmental credits on-chain.
+
+**Key Design & Security Elements**
+- ERC-1155 multi-token standard
+- `Ownable` for administrative control
+- Credit registration and approval system
+- Supply and retirement tracking
+- Freeze and revoke mechanisms
+- Safe transfer validation
+
+This contract acts as the **source of truth** for all green credits.
+
+---
+
+### 2️⃣ ERC-1155 → ERC-20 Wrapper Layer
+
+**Purpose**: Enable green credits to participate in DeFi.
+
+**Architecture**
+- Factory-based wrapper deployment
+- One ERC-20 wrapper per credit type
+- Fully collateralized 1:1 backing
+
+**Security & Design**
+- ERC-20 standard (18 decimals)
+- `ReentrancyGuard`
+- `IERC1155Receiver` compliance
+- Safe mint and burn logic
+- Credit status validation (freeze / revoke)
+
+---
+
+### 3️⃣ AMM Layer (Uniswap V2 Style)
+
+**Purpose**: Provide permissionless liquidity and swaps.
+
+**Architecture**
+- Factory: deterministic pair creation
+- Pair: liquidity pools + LP tokens
+- Router: single entry point for users
+
+**Characteristics**
+- Constant product formula (`x * y = k`)
+- 0.3% liquidity provider fee
+- Minimum liquidity lock
+- Multi-hop swap support
+
+**Safety**
+- Slippage protection
+- Deadline enforcement
+- Reserve synchronization
+- Reentrancy protection
+
+---
+
+### 4️⃣ Orderbook (Stablecoin Settlement)
+
+**Purpose**: Enable direct buy/sell of credits at fixed prices.
+
+**Architecture & Security**
+- UUPS upgradeable contract
+- On-chain escrow
+- `AccessControl` roles
+- `Pausable` emergency controls
+- `ReentrancyGuard`
+- Safe ERC-20 and ERC-1155 transfers
+
+---
+
+## 💵 Stablecoin & Faucet System
+
+- Trades settle using **Mock USDC**
+- Faucet provided on the frontend
+- Enables realistic testing during development
+- Low-friction onboarding for new users
+
+---
+
+## ⚙️ Technology Stack
+
+### Smart Contracts
+- Solidity ^0.8.20  
+- OpenZeppelin (`Ownable`, `AccessControl`, `ReentrancyGuard`, `Pausable`)  
+- ERC-1155 & ERC-20 standards  
+- Uniswap V2–style AMM  
+
+### Frontend
+- Next.js 14 (App Router)
+- TailwindCSS
+- Ethers.js
+
+### AI Layer
+- LLM-based assistant
+- On-chain data interpretation
+- Swap confidence scoring
+- Read-only execution model
+
+### Network
+- Mantle Sepolia (L2)
+- Chain ID: 5003
+
+---
+
+## 🚀 Getting Started
 
 ```bash
-git clone https://github.com/<your-username>/greenxchange.git
-cd greenxchange/frontend
-```
-
-### 3️⃣ Install Dependencies
-
-```bash
+git clone https://github.com/Shivamd0608/GreenXAi.git
+cd GreenXAi/frontend
 npm install
-```
-
-### 4️⃣ Run the Development Server
-
-```bash
 npm run dev
-```
 
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
+📜 License
+MIT License
 
-## 🧩 Frontend Integration Notes
-
-- All contract ABIs live under `/ABI`
-- The context files (`Orderbook.js`, `MintToken.js`, etc.) handle:
-  - Connecting to wallet
-  - Getting contract instances
-  - Calling contract methods (`placeOrder`, `fillOrder`, `approve`, etc.)
-- Uses `ethers@5.8.0` for compatibility with existing hooks and providers
-.
-
-## 📜 License
-
-Released under the MIT License.
-
-© 2025 GreenXchange. All rights reserved.
