@@ -460,10 +460,6 @@ const gctabi = [
 		"type": "event"
 	},
 	{
-		"stateMutability": "payable",
-		"type": "fallback"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -617,6 +613,11 @@ const gctabi = [
 						"internalType": "string",
 						"name": "certificateHash",
 						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "registrar",
+						"type": "address"
 					},
 					{
 						"internalType": "bool",

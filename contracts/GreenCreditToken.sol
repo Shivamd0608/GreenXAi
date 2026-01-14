@@ -21,6 +21,7 @@ contract GreenCreditToken is ERC1155, Ownable {
         string projectTitle;
         string location;
         string certificateHash;
+          address registrar;
         bool exists;
         bool revoked;
     }
@@ -73,27 +74,29 @@ contract GreenCreditToken is ERC1155, Ownable {
     // CREDIT REGISTRATION
     // ---------------------------------------------------------
     function registerCredit(
-        uint256 tokenId,
-        CreditType creditType,
-        string calldata projectTitle,
-        string calldata location,
-        string calldata certificateHash
-    ) external onlyOwner {
-        require(!creditData[tokenId].exists, "Credit ID exists");
-        require(_isValidProjectTitle(projectTitle), "Invalid title");
-        require(_isValidCertificateHash(certificateHash), "Invalid certificate hash");
+    uint256 tokenId,
+    CreditType creditType,
+    string calldata projectTitle,
+    string calldata location,
+    string calldata certificateHash
+) external {
+    require(!creditData[tokenId].exists, "Credit ID exists");
+    require(_isValidProjectTitle(projectTitle), "Invalid title");
+    require(_isValidCertificateHash(certificateHash), "Invalid certificate hash");
 
-        creditData[tokenId] = CreditInfo({
-            creditType: creditType,
-            projectTitle: projectTitle,
-            location: location,
-            certificateHash: certificateHash,
-            exists: true,
-            revoked: false
-        });
+    creditData[tokenId] = CreditInfo({
+        creditType: creditType,
+        projectTitle: projectTitle,
+        location: location,
+        certificateHash: certificateHash,
+        registrar: msg.sender, // TRACK USER
+        exists: true,
+        revoked: false
+    });
 
-        emit CreditRegistered(tokenId, creditType, projectTitle, certificateHash);
-    }
+    emit CreditRegistered(tokenId, creditType, projectTitle, certificateHash);
+}
+
 
     // ---------------------------------------------------------
     // MINT APPROVAL
