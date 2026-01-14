@@ -124,18 +124,23 @@ This helps users **understand trade quality before execution**.
 ┌──────────────────────────────────────────┐
 │ Mantle Sepolia (L2) │
 │ │
+
 │ ┌──────── ERC-1155 Credits ─────────┐ │
 │ │ GreenCreditToken │ │
 │ └──────────────┬────────────────────┘ │
+
 │ ▼ │
 │ ┌──────── ERC-20 Wrappers ───────────┐ │
 │ │ Wrapper Factory + Wrappers │ │
 │ └──────────────┬─────────────────────┘ │
-│ ▼ │
+│ ▼
+ │
 │ ┌────────── AMM (Uniswap V2) ─────────┐│
 │ │ Factory • Pair • Router ││
-│ └──────────────┬──────────────────────┘│
-│ ▼ │
+│ └──────────────┬──────────────────────┘
+│
+│ ▼
+  │
 │ ┌────────── Orderbook ────────────────┐│
 │ │ Stablecoin-settled credit trades ││
 │ └─────────────────────────────────────┘│

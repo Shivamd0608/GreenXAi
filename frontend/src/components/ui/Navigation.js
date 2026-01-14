@@ -12,11 +12,12 @@ export default function Navigation() {
 
   const navItems = [
     { name: 'Home', href: '/' },
+    { name: 'Faucet', href: '/faucet' },
+    { name: 'Wrap', href: '/wrap' },
+    { name: 'AMM', href: '/amm' },
     { name: 'Marketplace', href: '/marketplace' },
-    { name: 'AMM', href: '/trade/amm' },
-    { name: 'Green Credits', href: '/green-credits' },
+    { name: 'Credits', href: '/green-credits' },
     { name: 'Onboarding', href: '/onboarding' },
-    { name: 'Verification', href: '/verification' }
   ];
 
   const isActive = (href) =>
@@ -32,7 +33,7 @@ export default function Navigation() {
             href="/"
             className="text-xl font-semibold tracking-tight text-gray-100"
           >
-            Green<span className="text-emerald-400">Xchange</span>
+            Green<span className="text-emerald-400">XAI</span>
           </Link>
 
           {/* Desktop Navigation */}

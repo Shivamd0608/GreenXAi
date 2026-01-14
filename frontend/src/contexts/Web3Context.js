@@ -1,12 +1,14 @@
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import { CHAIN_CONFIG } from '../config/contracts';
 
 const Web3Context = createContext({
   account: '',
   provider: null,
   signer: null,
   network: null,
+  chainId: null,
   isConnected: false,
   balance: '0',
   contracts: {},
@@ -22,12 +24,14 @@ export function Web3Provider({ children }) {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [network, setNetwork] = useState(null);
+  const [chainId, setChainId] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [balance, setBalance] = useState('0');
   const [contracts, setContracts] = useState({});
 
-  const SEPOLIA_CHAIN_ID = '0xaa36a7'; // hex
-  const SEPOLIA_CHAIN_DEC = 11155111;  // decimal
+  // Mantle Sepolia configuration
+  const TARGET_CHAIN_ID = CHAIN_CONFIG.chainIdHex; // hex
+  const TARGET_CHAIN_DEC = CHAIN_CONFIG.chainId;  // decimal
 
   const isMetaMaskInstalled = () => {
     return typeof window !== 'undefined' && window.ethereum;
@@ -51,37 +55,33 @@ export function Web3Provider({ children }) {
     }
   };
 
-  const ensureSepoliaNetwork = async () => {
-    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-    if (chainId !== SEPOLIA_CHAIN_ID) {
+  const ensureCorrectNetwork = async () => {
+    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+    if (currentChainId !== TARGET_CHAIN_ID) {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: SEPOLIA_CHAIN_ID }],
+          params: [{ chainId: TARGET_CHAIN_ID }],
         });
         // Wait a moment for network change to apply
         await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
-        // If Sepolia is not added yet
+        // If chain is not added yet
         if (error.code === 4902) {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [
               {
-                chainId: SEPOLIA_CHAIN_ID,
-                chainName: 'Sepolia Test Network',
-                nativeCurrency: {
-                  name: 'SepoliaETH',
-                  symbol: 'ETH',
-                  decimals: 18,
-                },
-                rpcUrls: ['https://ethereum-sepolia-rpc.publicnode.com'],
-                blockExplorerUrls: ['https://sepolia.etherscan.io'],
+                chainId: TARGET_CHAIN_ID,
+                chainName: CHAIN_CONFIG.chainName,
+                nativeCurrency: CHAIN_CONFIG.nativeCurrency,
+                rpcUrls: CHAIN_CONFIG.rpcUrls,
+                blockExplorerUrls: CHAIN_CONFIG.blockExplorerUrls,
               },
             ],
           });
         } else {
-          throw new Error('Please switch to the Sepolia network in MetaMask.');
+          throw new Error(`Please switch to ${CHAIN_CONFIG.chainName} in MetaMask.`);
         }
       }
     }
@@ -89,24 +89,25 @@ export function Web3Provider({ children }) {
 
   const initializeWeb3 = async (accountAddress) => {
     try {
-      await ensureSepoliaNetwork(); // ✅ enforce Sepolia before proceeding
+      await ensureCorrectNetwork(); // ✅ enforce Mantle Sepolia before proceeding
 
       const web3Provider = new ethers.providers.Web3Provider(window.ethereum);
       const web3Signer = web3Provider.getSigner();
-      const network = await web3Provider.getNetwork();
+      const networkData = await web3Provider.getNetwork();
 
-      if (network.chainId !== SEPOLIA_CHAIN_DEC) {
-        throw new Error('Please switch to the Sepolia testnet in MetaMask.');
+      if (networkData.chainId !== TARGET_CHAIN_DEC) {
+        throw new Error(`Please switch to ${CHAIN_CONFIG.chainName} in MetaMask.`);
       }
 
       setAccount(accountAddress);
       setProvider(web3Provider);
       setSigner(web3Signer);
-      setNetwork(network);
+      setNetwork(networkData);
+      setChainId(networkData.chainId);
       setIsConnected(true);
 
-      const balance = await web3Provider.getBalance(accountAddress);
-      setBalance(ethers.utils.formatEther(balance));
+      const balanceWei = await web3Provider.getBalance(accountAddress);
+      setBalance(ethers.utils.formatEther(balanceWei));
 
       setupEventListeners(web3Provider);
     } catch (error) {
@@ -153,6 +154,7 @@ export function Web3Provider({ children }) {
     setProvider(null);
     setSigner(null);
     setNetwork(null);
+    setChainId(null);
     setIsConnected(false);
     setBalance('0');
     setContracts({});
@@ -163,6 +165,7 @@ export function Web3Provider({ children }) {
     provider,
     signer,
     network,
+    chainId,
     isConnected,
     balance,
     contracts,
