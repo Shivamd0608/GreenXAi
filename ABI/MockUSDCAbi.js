@@ -804,3 +804,5 @@ const MockUSDCAbi = [
 		"type": "function"
 	}
 ]
+
+ export default  MockUSDCAbi;

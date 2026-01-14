@@ -13,12 +13,12 @@ const orderbookAbi =[
 			},
 			{
 				"internalType": "address",
-				"name": "pyusdAddress",
+				"name": "mUSDCAddress",
 				"type": "address"
 			},
 			{
 				"internalType": "uint8",
-				"name": "_pyusdDecimals",
+				"name": "_mUSDCDecimals",
 				"type": "uint8"
 			}
 		],
@@ -215,50 +215,6 @@ const orderbookAbi =[
 		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "orderId",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "maker",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "PYUSDEscrowed",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "PYUSDWithdrawn",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
 				"indexed": false,
 				"internalType": "address",
 				"name": "account",
@@ -357,6 +313,50 @@ const orderbookAbi =[
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "mUSDCWithdrawn",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "orderId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "maker",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "mUSDCescrowed",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "DEFAULT_ADMIN_ROLE",
 		"outputs": [
@@ -384,7 +384,7 @@ const orderbookAbi =[
 	},
 	{
 		"inputs": [],
-		"name": "SEPOLIA_PYUSD",
+		"name": "SEPOLIA_mUSDC",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -496,7 +496,7 @@ const orderbookAbi =[
 				"type": "uint256"
 			}
 		],
-		"name": "escrowedPYUSDByOrder",
+		"name": "escrowedmUSDCByOrder",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -581,6 +581,51 @@ const orderbookAbi =[
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "mUSDC",
+		"outputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "mUSDCDecimals",
+		"outputs": [
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "mUSDCEscrowed",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -858,51 +903,6 @@ const orderbookAbi =[
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "pyusd",
-		"outputs": [
-			{
-				"internalType": "contract IERC20",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "pyusdDecimals",
-		"outputs": [
-			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "pyusdEscrowed",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "bytes32",
@@ -951,7 +951,7 @@ const orderbookAbi =[
 				"type": "uint8"
 			}
 		],
-		"name": "setPYUSD",
+		"name": "setmUSDC",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -995,7 +995,7 @@ const orderbookAbi =[
 				"type": "uint256"
 			}
 		],
-		"name": "withdrawPYUSD",
+		"name": "withdrawmUSDC",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

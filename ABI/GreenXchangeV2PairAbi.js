@@ -521,3 +521,5 @@ const GreenXchangeV2PairAbi = [
 		"type": "function"
 	}
 ]
+
+ export default GreenXchangeV2PairAbi;

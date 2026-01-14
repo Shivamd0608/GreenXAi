@@ -105,3 +105,5 @@ const GreenXchangeV2FactoryAbi = [
 		"type": "function"
 	}
 ]
+
+ export default GreenXchangeV2FactoryAbi;
