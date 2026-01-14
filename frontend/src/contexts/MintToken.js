@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 
 
 const CONTRACT_ADDRESS = "0xa82fA397006c6314B0bfFCBAA06FbfbcC805b619";
+//const CONTRACT_ADDRESS= process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
 import gctabi from "../../../ABI/GreenCreditTokenAbi"; 
 
 // ⚠️ Replace with your private key (keep this in .env.local, NEVER hardcode!)
