@@ -105,3 +105,4 @@ const GreenXchangeV2RouterAbi = [
 		"type": "function"
 	}
 ]
+ export default GreenXchangeV2RouterAbi;

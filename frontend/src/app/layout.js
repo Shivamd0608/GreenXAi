@@ -1,12 +1,13 @@
 // app/layout.js - CLEAN VERSION
-import './globals.css';
-import { Web3Provider } from '../contexts/Web3Context';
-import LayoutWrapper from '../components/LayoutWrapper';
-import Navigation from "../components/ui/Navigation"
+import "./globals.css";
+import { Web3Provider } from "../contexts/Web3Context";
+import LayoutWrapper from "../components/LayoutWrapper";
+import Navigation from "../components/ui/Navigation";
+import AIChatFloating from "../components/AIChatFloating";
 
 export const metadata = {
-  title: 'GreenXchange - Carbon Credit Trading',
-  description: 'Modern platform for carbon credit trading',
+  title: "GreenXchange - Carbon Credit Trading",
+  description: "Modern platform for carbon credit trading",
 };
 
 export default function RootLayout({ children }) {
@@ -14,13 +15,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       {/* NO bg class here */}
       <body className="antialiased">
-       
         <Web3Provider>
-          <LayoutWrapper> 
-            <Navigation/>
+          <LayoutWrapper>
+            <Navigation />
             {children}
+            <AIChatFloating />
           </LayoutWrapper>
-       </Web3Provider>
+        </Web3Provider>
       </body>
     </html>
   );

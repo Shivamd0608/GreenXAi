@@ -1,4 +1,4 @@
-[
+const WrappedGreenCreditAbi=[
 	{
 		"anonymous": false,
 		"inputs": [
@@ -368,3 +368,4 @@
 		"type": "function"
 	}
 ]
+export default WrappedGreenCreditAbi;

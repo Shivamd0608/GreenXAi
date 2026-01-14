@@ -127,3 +127,5 @@ const WrappedGreenCreditFactoryAbi = [
 		"type": "function"
 	}
 ]
+
+export default WrappedGreenCreditFactoryAbi;
