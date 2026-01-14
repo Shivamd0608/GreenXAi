@@ -2,19 +2,42 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { ethers } from "ethers";
-import { CheckCircle, Info, AlertCircle, X, RefreshCw, TrendingUp, Activity, DollarSign, Shield, ArrowRight, Plus } from "lucide-react";
+import {
+  CheckCircle,
+  Info,
+  AlertCircle,
+  X,
+  RefreshCw,
+  TrendingUp,
+  Activity,
+  DollarSign,
+  Shield,
+  ArrowRight,
+  Plus,
+} from "lucide-react";
 
 import {
   approveGreenCredit,
-  approvePYUSD,
+  approveMUSDC,
   placeOrder,
   fillOrder,
   getOrder,
   isOrderActive,
+  getGreenCreditBalance,
 } from "../../contexts/Orderbook";
 
 import orderbookAbi from "../../../../ABI/GreenXchangeOrderbookAbi";
-const ORDERBOOK_ADDRESS = "0x5606f038a656684746f0F8a6e5eEf058de2fe05c";
+const ORDERBOOK_ADDRESS = process.env.NEXT_PUBLIC_ORDERBOOK;
+
+// Debug: log the orderbook address being used
+if (typeof window !== "undefined") {
+  console.log("📋 Marketplace using ORDERBOOK_ADDRESS:", ORDERBOOK_ADDRESS);
+  if (!ORDERBOOK_ADDRESS) {
+    console.error(
+      "⚠️ NEXT_PUBLIC_ORDERBOOK is undefined! Check your .env file."
+    );
+  }
+}
 
 async function getReadOnlyContract() {
   if (!window.ethereum) throw new Error("MetaMask not found");
@@ -36,20 +59,25 @@ const Notification = ({ type, message, onClose }) => {
   const icons = {
     success: <CheckCircle className="w-5 h-5 text-green-400" />,
     info: <Info className="w-5 h-5 text-blue-400" />,
-    error: <AlertCircle className="w-5 h-5 text-red-400" />
+    error: <AlertCircle className="w-5 h-5 text-red-400" />,
   };
 
   const bgColors = {
     success: "bg-emerald-500/10 border-emerald-500/30",
     info: "bg-blue-500/10 border-blue-500/30",
-    error: "bg-red-500/10 border-red-500/30"
+    error: "bg-red-500/10 border-red-500/30",
   };
 
   return (
-    <div className={`${bgColors[type]} border rounded-xl p-4 flex items-start gap-3 shadow-lg backdrop-blur-sm animate-slideIn`}>
+    <div
+      className={`${bgColors[type]} border rounded-xl p-4 flex items-start gap-3 shadow-lg backdrop-blur-sm animate-slideIn`}
+    >
       {icons[type]}
       <p className="flex-1 text-sm text-gray-100">{message}</p>
-      <button onClick={onClose} className="text-gray-400 hover:text-gray-200 transition-colors">
+      <button
+        onClick={onClose}
+        className="text-gray-400 hover:text-gray-200 transition-colors"
+      >
         <X className="w-4 h-4" />
       </button>
     </div>
@@ -58,19 +86,27 @@ const Notification = ({ type, message, onClose }) => {
 
 // Order Card Component - Cleaner Design
 const OrderCard = ({ order, type, onFill, loading }) => {
-  const isBuy = type === 'buy';
+  const isBuy = type === "buy";
   const [fillAmount, setFillAmount] = useState("1");
-  
+
   return (
     <div className="bg-slate-900/50 border border-slate-700/50 rounded-lg p-3 hover:bg-slate-900/70 transition-all duration-200 hover:border-slate-600/50">
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
-          <span className={`text-xs font-bold px-2 py-1 rounded ${isBuy ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
-            {isBuy ? 'BUY' : 'SELL'}
+          <span
+            className={`text-xs font-bold px-2 py-1 rounded ${
+              isBuy
+                ? "bg-emerald-500/20 text-emerald-400"
+                : "bg-red-500/20 text-red-400"
+            }`}
+          >
+            {isBuy ? "BUY" : "SELL"}
           </span>
           <span className="text-xs text-slate-400">#{order.id}</span>
         </div>
-        <span className="text-xs text-slate-500">Token #{order.order.tokenId?.toString() || 'N/A'}</span>
+        <span className="text-xs text-slate-500">
+          Token #{order.order.tokenId?.toString() || "N/A"}
+        </span>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-3">
@@ -101,12 +137,12 @@ const OrderCard = ({ order, type, onFill, loading }) => {
           onClick={() => onFill(order.id, Number(fillAmount))}
           disabled={loading}
           className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-            isBuy 
-              ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
-              : 'bg-red-600 hover:bg-red-700 text-white'
+            isBuy
+              ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+              : "bg-red-600 hover:bg-red-700 text-white"
           }`}
         >
-          {isBuy ? 'Sell' : 'Buy'}
+          {isBuy ? "Sell" : "Buy"}
         </button>
       </div>
     </div>
@@ -117,24 +153,39 @@ export default function MarketplaceClient() {
   const [tokenId, setTokenId] = useState(1);
   const [priceInput, setPriceInput] = useState("1");
   const [amountInput, setAmountInput] = useState("1");
-  const [pyusdDecimals] = useState(6);
+  const [mUSDCDecimals] = useState(6);
   const [activeBuyOrders, setActiveBuyOrders] = useState([]);
   const [activeSellOrders, setActiveSellOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [activeTab, setActiveTab] = useState('marketplace');
+  const [activeTab, setActiveTab] = useState("marketplace");
+  const [userBalance, setUserBalance] = useState("0");
+
+  // Load user's balance for the selected tokenId
+  const loadUserBalance = useCallback(async () => {
+    try {
+      const balance = await getGreenCreditBalance(tokenId);
+      setUserBalance(balance.toString());
+    } catch (err) {
+      console.error("Error loading user balance:", err);
+      setUserBalance("0");
+    }
+  }, [tokenId]);
 
   const addNotification = (type, message) => {
     const id = Date.now();
-    setNotifications(prev => [...prev, { id, type, message }]);
+    setNotifications((prev) => [...prev, { id, type, message }]);
     setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
     }, 5000);
   };
 
   const parseAmount = useCallback((val) => ethers.BigNumber.from(val), []);
-  const parsePrice = useCallback((val) => ethers.utils.parseUnits(val, pyusdDecimals), [pyusdDecimals]);
+  const parsePrice = useCallback(
+    (val) => ethers.utils.parseUnits(val, mUSDCDecimals),
+    [mUSDCDecimals]
+  );
 
   const loadActiveOrders = useCallback(async () => {
     try {
@@ -177,7 +228,10 @@ export default function MarketplaceClient() {
       setActiveSellOrders(sells);
     } catch (err) {
       console.error("Error loading active orders:", err);
-      addNotification('error', "Error loading active orders: " + (err?.message || err));
+      addNotification(
+        "error",
+        "Error loading active orders: " + (err?.message || err)
+      );
     } finally {
       setLoading(false);
     }
@@ -221,7 +275,10 @@ export default function MarketplaceClient() {
       setCompletedOrders(completed);
     } catch (err) {
       console.error("Error loading completed orders:", err);
-      addNotification('error', "Error loading completed orders: " + (err?.message || err));
+      addNotification(
+        "error",
+        "Error loading completed orders: " + (err?.message || err)
+      );
     } finally {
       setLoading(false);
     }
@@ -230,22 +287,33 @@ export default function MarketplaceClient() {
   const handlePlaceSellOrder = async () => {
     try {
       setLoading(true);
-      
-      addNotification('info', "Requesting ERC1155 approval...");
+
+      addNotification("info", "Requesting ERC1155 approval...");
       await approveGreenCredit();
 
       const price = parsePrice(priceInput);
       const amount = parseAmount(amountInput);
 
-      addNotification('info', "Placing sell order...");
-      const receipt = await placeOrder(tokenId, false, price, amount, 0, 0, ethers.constants.AddressZero);
-      
-      addNotification('success', "Sell order placed successfully!");
-      
+      addNotification("info", "Placing sell order...");
+      const receipt = await placeOrder(
+        tokenId,
+        false,
+        price,
+        amount,
+        0,
+        0,
+        ethers.constants.AddressZero
+      );
+
+      addNotification("success", "Sell order placed successfully!");
+
       await loadActiveOrders();
     } catch (err) {
       console.error("Error placing sell order:", err);
-      addNotification('error', "Error placing sell order: " + (err?.message || err));
+      addNotification(
+        "error",
+        "Error placing sell order: " + (err?.message || err)
+      );
     } finally {
       setLoading(false);
     }
@@ -258,18 +326,29 @@ export default function MarketplaceClient() {
       const amount = parseAmount(amountInput);
       const total = price.mul(amount);
 
-      addNotification('info', "Requesting PYUSD approval...");
-      await approvePYUSD(total);
+      addNotification("info", "Requesting mUSDC approval...");
+      await approveMUSDC(total);
 
-      addNotification('info', "Placing buy order...");
-      const receipt = await placeOrder(tokenId, true, price, amount, 0, 0, ethers.constants.AddressZero);
-      
-      addNotification('success', "Buy order placed successfully!");
-      
+      addNotification("info", "Placing buy order...");
+      const receipt = await placeOrder(
+        tokenId,
+        true,
+        price,
+        amount,
+        0,
+        0,
+        ethers.constants.AddressZero
+      );
+
+      addNotification("success", "Buy order placed successfully!");
+
       await loadActiveOrders();
     } catch (err) {
       console.error("Error placing buy order:", err);
-      addNotification('error', "Error placing buy order: " + (err?.message || err));
+      addNotification(
+        "error",
+        "Error placing buy order: " + (err?.message || err)
+      );
     } finally {
       setLoading(false);
     }
@@ -285,22 +364,22 @@ export default function MarketplaceClient() {
 
       if (!isBuy) {
         const tradeValue = price.mul(fillAmount);
-        addNotification('info', "Approving PYUSD for purchase...");
-        await approvePYUSD(tradeValue);
+        addNotification("info", "Approving mUSDC for purchase...");
+        await approveMUSDC(tradeValue);
       } else {
-        addNotification('info', "Approving credits for sale...");
+        addNotification("info", "Approving credits for sale...");
         await approveGreenCredit();
       }
 
-      addNotification('info', "Filling order...");
+      addNotification("info", "Filling order...");
       const receipt = await fillOrder(orderId, fillAmount);
-      
-      addNotification('success', "Order filled successfully!");
-      
+
+      addNotification("success", "Order filled successfully!");
+
       await Promise.all([loadActiveOrders(), loadCompletedOrders()]);
     } catch (err) {
       console.error("Error filling order:", err);
-      addNotification('error', "Error filling order: " + (err?.message || err));
+      addNotification("error", "Error filling order: " + (err?.message || err));
     } finally {
       setLoading(false);
     }
@@ -322,20 +401,23 @@ export default function MarketplaceClient() {
   useEffect(() => {
     loadActiveOrders();
     loadCompletedOrders();
-  }, [tokenId, loadActiveOrders, loadCompletedOrders]);
+    loadUserBalance();
+  }, [tokenId, loadActiveOrders, loadCompletedOrders, loadUserBalance]);
 
   return (
     <div className="min-h-screen bg-black text-gray-100 relative">
       <AnimatedBackground />
-      
+
       {/* Notifications Container */}
       <div className="fixed top-6 right-6 z-50 space-y-2 w-full max-w-md">
-        {notifications.map(notif => (
+        {notifications.map((notif) => (
           <Notification
             key={notif.id}
             type={notif.type}
             message={notif.message}
-            onClose={() => setNotifications(prev => prev.filter(n => n.id !== notif.id))}
+            onClose={() =>
+              setNotifications((prev) => prev.filter((n) => n.id !== notif.id))
+            }
           />
         ))}
       </div>
@@ -350,7 +432,9 @@ export default function MarketplaceClient() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-white">GreenXchange</h1>
-                <p className="text-slate-400 text-sm">Trade Green Credits with PYUSD</p>
+                <p className="text-slate-400 text-sm">
+                  Trade Green Credits with mUSDC
+                </p>
               </div>
             </div>
             <button
@@ -358,7 +442,9 @@ export default function MarketplaceClient() {
               disabled={loading}
               className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg transition-all disabled:opacity-50"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+              />
               <span className="text-sm">Refresh</span>
             </button>
           </div>
@@ -366,21 +452,21 @@ export default function MarketplaceClient() {
           {/* Tab Navigation */}
           <div className="flex gap-2 border-b border-slate-700">
             <button
-              onClick={() => setActiveTab('marketplace')}
+              onClick={() => setActiveTab("marketplace")}
               className={`px-6 py-3 text-sm font-semibold transition-all ${
-                activeTab === 'marketplace'
-                  ? 'text-emerald-400 border-b-2 border-emerald-400'
-                  : 'text-slate-400 hover:text-slate-300'
+                activeTab === "marketplace"
+                  ? "text-emerald-400 border-b-2 border-emerald-400"
+                  : "text-slate-400 hover:text-slate-300"
               }`}
             >
               Marketplace
             </button>
             <button
-              onClick={() => setActiveTab('history')}
+              onClick={() => setActiveTab("history")}
               className={`px-6 py-3 text-sm font-semibold transition-all ${
-                activeTab === 'history'
-                  ? 'text-emerald-400 border-b-2 border-emerald-400'
-                  : 'text-slate-400 hover:text-slate-300'
+                activeTab === "history"
+                  ? "text-emerald-400 border-b-2 border-emerald-400"
+                  : "text-slate-400 hover:text-slate-300"
               }`}
             >
               Order History
@@ -388,27 +474,36 @@ export default function MarketplaceClient() {
           </div>
         </div>
 
-        {activeTab === 'marketplace' && (
+        {activeTab === "marketplace" && (
           <div className="space-y-6">
             {/* Create Order Section */}
             <div className="bg-slate-900/30 border border-slate-700/50 rounded-xl p-6">
               <div className="flex items-center gap-2 mb-6">
                 <Plus className="w-5 h-5 text-emerald-400" />
-                <h2 className="text-xl font-bold text-white">Create New Order</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Create New Order
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Token ID</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Token ID
+                  </label>
                   <input
                     type="number"
                     value={tokenId}
                     onChange={(e) => setTokenId(Number(e.target.value))}
                     className="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
                   />
+                  <div className="mt-1 text-xs text-emerald-400">
+                    Your balance: {userBalance} credits
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Price (PYUSD)</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Price (mUSDC)
+                  </label>
                   <input
                     type="text"
                     value={priceInput}
@@ -418,7 +513,9 @@ export default function MarketplaceClient() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Amount</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Amount
+                  </label>
                   <input
                     type="number"
                     value={amountInput}
@@ -433,21 +530,23 @@ export default function MarketplaceClient() {
                     disabled={loading}
                     className="flex-1 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200"
                   >
-                    {loading ? '...' : 'Sell'}
+                    {loading ? "..." : "Sell"}
                   </button>
                   <button
                     onClick={handlePlaceBuyOrder}
                     disabled={loading}
                     className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-200"
                   >
-                    {loading ? '...' : 'Buy'}
+                    {loading ? "..." : "Buy"}
                   </button>
                 </div>
               </div>
 
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 flex items-center gap-3">
                 <Shield className="w-5 h-5 text-blue-400 flex-shrink-0" />
-                <p className="text-sm text-slate-300">All transactions are settled in PYUSD stablecoin</p>
+                <p className="text-sm text-slate-300">
+                  All transactions are settled in mUSDC stablecoin
+                </p>
               </div>
             </div>
 
@@ -522,7 +621,7 @@ export default function MarketplaceClient() {
           </div>
         )}
 
-        {activeTab === 'history' && (
+        {activeTab === "history" && (
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-cyan-400 flex items-center gap-2">
@@ -536,7 +635,9 @@ export default function MarketplaceClient() {
                 disabled={loading}
                 className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg transition-all disabled:opacity-50"
               >
-                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <RefreshCw
+                  className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                />
                 <span className="text-sm">Refresh</span>
               </button>
             </div>
@@ -553,23 +654,30 @@ export default function MarketplaceClient() {
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-cyan-400 font-semibold">#{c.id}</span>
-                        <span className={`text-xs font-bold px-2 py-1 rounded ${
-                          c.order.isBuy 
-                            ? 'bg-emerald-500/20 text-emerald-400' 
-                            : 'bg-red-500/20 text-red-400'
-                        }`}>
-                          {c.order.isBuy ? 'BUY' : 'SELL'}
+                        <span className="font-mono text-cyan-400 font-semibold">
+                          #{c.id}
+                        </span>
+                        <span
+                          className={`text-xs font-bold px-2 py-1 rounded ${
+                            c.order.isBuy
+                              ? "bg-emerald-500/20 text-emerald-400"
+                              : "bg-red-500/20 text-red-400"
+                          }`}
+                        >
+                          {c.order.isBuy ? "BUY" : "SELL"}
                         </span>
                       </div>
-                      <span className="text-xs text-slate-500">Token #{c.order.tokenId?.toString() || 'N/A'}</span>
+                      <span className="text-xs text-slate-500">
+                        Token #{c.order.tokenId?.toString() || "N/A"}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-white font-semibold">
-                        ${ethers.utils.formatUnits(c.order.price, 6)} PYUSD
+                        ${ethers.utils.formatUnits(c.order.price, 6)} mUSDC
                       </span>
                       <span className="text-slate-400">
-                        {c.order.filled.toString()}/{c.order.amount.toString()} units
+                        {c.order.filled.toString()}/{c.order.amount.toString()}{" "}
+                        units
                       </span>
                     </div>
                   </div>
@@ -594,7 +702,7 @@ export default function MarketplaceClient() {
         .animate-slideIn {
           animation: slideIn 0.3s ease-out;
         }
-        
+
         .scrollbar-thin::-webkit-scrollbar {
           width: 6px;
         }

@@ -137,7 +137,7 @@ export default function OnboardingPage() {
           <p className="text-gray-400 text-sm">Complete these 4 steps to start generating green credits</p>
         </div>
 
-        {/* Progress Steps - Horizontal */}
+        {/* Progress Steps - Simplified */}
         <div className="flex justify-center mb-12">
           <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-xl p-3 border border-gray-800">
             {steps.map((step, index) => (
@@ -168,210 +168,89 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* Centered Animated Card at Top */}
-        <div className="flex justify-center mb-12">
-          <div
-            ref={containerRef}
-            className="transition-all duration-500 ease-out transform"
-            style={{
-              transformStyle: 'preserve-3d',
-              perspective: '1000px'
-            }}
-          >
-            <AnimatedFormCard
-              title={currentStepData.title}
-              subtitle={currentStepData.subtitle}
-              icon={currentStepData.icon}
-              stepNumber={currentStepData.id}
-              isActive={!isTransitioning}
-              onClick={() => handleCardClick(currentStepData.id)}
+        {/* Main Content - Focused Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Left Side - Information Panel */}
+          <div className="lg:col-span-1">
+            <InformationPanel 
+              currentStep={activeStep} 
+              onStart={handleStartForm}
             />
           </div>
-        </div>
 
-        {/* Symmetrical Content Below - Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {/* Left Side - Project Information */}
-          <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-700 p-6">
-            <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-cyan-600 rounded-xl flex items-center justify-center mr-4">
-                <span className="text-2xl">📋</span>
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">Project Information Required</h2>
-                <p className="text-gray-400 text-sm">
-                  We need details about your green energy project to create verifiable credits
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <button
-                onClick={handleStartForm}
-                className="w-full bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white py-3 rounded-lg font-semibold text-base transition-all duration-300"
-              >
-                Start Filling Information
-              </button>
-            </div>
-
-            <div className="border-t border-gray-800 pt-6">
-              <h3 className="text-lg font-bold text-white mb-4">Information You'll Need</h3>
+          {/* Center - Focused Card */}
+          <div className="lg:col-span-1 flex justify-center">
+            <div
+              ref={containerRef}
+              className="transition-all duration-500 ease-out transform w-full"
+              style={{
+                transformStyle: 'preserve-3d',
+                perspective: '1000px'
+              }}
+            >
+              <AnimatedFormCard
+                title={currentStepData.title}
+                subtitle={currentStepData.subtitle}
+                icon={currentStepData.icon}
+                stepNumber={currentStepData.id}
+                isActive={!isTransitioning}
+                onClick={() => handleCardClick(currentStepData.id)}
+              />
               
-              <div className="space-y-6">
-                {/* Item 1 */}
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-emerald-900/30 border border-emerald-500 rounded-lg flex items-center justify-center text-emerald-400 font-bold mr-3 flex-shrink-0">
-                    1
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Project Name & Location</h4>
-                    <p className="text-gray-400 text-sm mb-2">
-                      Identify and locate your project for verification
-                    </p>
-                    <div className="bg-gray-800/50 rounded-lg p-3">
-                      <p className="text-emerald-300 text-sm italic">
-                        e.g., Rajasthan Solar Park, India
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Item 2 */}
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-emerald-900/30 border border-emerald-500 rounded-lg flex items-center justify-center text-emerald-400 font-bold mr-3 flex-shrink-0">
-                    2
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Project Type & Capacity</h4>
-                    <p className="text-gray-400 text-sm mb-2">
-                      Determine credit type and environmental impact
-                    </p>
-                    <div className="bg-gray-800/50 rounded-lg p-3">
-                      <p className="text-emerald-300 text-sm italic">
-                        e.g., Solar Farm, 50MW capacity
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Item 3 */}
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-emerald-900/30 border border-emerald-500 rounded-lg flex items-center justify-center text-emerald-400 font-bold mr-3 flex-shrink-0">
-                    3
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Expected Credits</h4>
-                    <p className="text-gray-400 text-sm mb-2">
-                      Estimate annual green credit generation
-                    </p>
-                    <div className="bg-gray-800/50 rounded-lg p-3">
-                      <p className="text-emerald-300 text-sm italic">
-                        e.g., 5,000 credits per year
-                      </p>
-                    </div>
-                  </div>
+              {/* Quick Status */}
+              <div className="text-center mt-4">
+                <div className="inline-flex items-center space-x-2 bg-black/50 rounded-lg px-4 py-2 border border-gray-700">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                  <span className="text-gray-400 text-sm">Click card to start</span>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Right Side - Onboarding Progress */}
-          <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-700 p-6">
-            <h3 className="text-xl font-bold text-white mb-6 flex items-center">
-              <span className="text-emerald-400 mr-2">📊</span>
-              Onboarding Progress
-            </h3>
-            
-            {/* Progress Steps List */}
-            <div className="space-y-4 mb-6">
-              {steps.map((step, index) => (
-                <div key={step.id} className="flex items-center space-x-3">
-                  <div className={`
-                    w-10 h-10 rounded-xl flex items-center justify-center text-lg
-                    ${currentStep > step.id 
-                      ? 'bg-emerald-500 text-white' 
-                      : currentStep === step.id
-                      ? 'bg-cyan-500 text-white'
-                      : 'bg-gray-700 text-gray-400'
-                    }
-                  `}>
-                    {step.icon}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-white font-medium">{step.title}</div>
-                        <div className="text-gray-400 text-sm">{step.subtitle}</div>
-                      </div>
-                      <div className={`
-                        w-3 h-3 rounded-full
-                        ${currentStep > step.id ? 'bg-emerald-500' : 
-                          currentStep === step.id ? 'bg-cyan-500 animate-pulse' : 'bg-gray-600'
-                        }
-                      `} />
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div className={`
-                        ml-5 mt-2 h-4 w-0.5
-                        ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-700'}
-                      `} />
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Completion Stats */}
-            <div className="bg-gray-800/50 rounded-xl p-4 mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-400 text-sm">Overall Progress</span>
-                <span className="text-emerald-400 font-semibold">
-                  {Math.round(((currentStep - 1) / steps.length) * 100)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-700 rounded-full h-2">
-                <div 
-                  className="bg-gradient-to-r from-emerald-500 to-cyan-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${((currentStep - 1) / steps.length) * 100}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Helpful Tips */}
-            <div className="border-t border-gray-800 pt-6">
+          {/* Right Side - Progress Overview */}
+          <div className="lg:col-span-1">
+            <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-gray-700 p-6">
               <h3 className="text-lg font-bold text-white mb-4 flex items-center">
-                <span className="text-cyan-400 mr-2">💡</span>
-                Helpful Tips
+                <span className="text-emerald-400 mr-2">📊</span>
+                Your Progress
               </h3>
               
               <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <div>
-                    <div className="text-white text-sm font-medium">Prepare Documents in Advance</div>
-                    <div className="text-gray-400 text-xs">
-                      Have your project plans, land ownership, and permits ready before starting
+                {steps.map((step, index) => (
+                  <div key={step.id} className="flex items-center space-x-3">
+                    <div className={`
+                      w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold
+                      ${currentStep > step.id 
+                        ? 'bg-emerald-500 text-white' 
+                        : currentStep === step.id
+                        ? 'bg-cyan-500 text-white'
+                        : 'bg-gray-700 text-gray-400'
+                      }
+                    `}>
+                      {step.id}
                     </div>
+                    <div className="flex-1">
+                      <div className="text-white text-sm font-medium">{step.name}</div>
+                      <div className="text-gray-400 text-xs">{step.title}</div>
+                    </div>
+                    <div className={`
+                      w-2 h-2 rounded-full
+                      ${currentStep > step.id ? 'bg-emerald-500' : 'bg-gray-600'}
+                    `} />
                   </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <div>
-                    <div className="text-white text-sm font-medium">Accurate Data Matters</div>
-                    <div className="text-gray-400 text-xs">
-                      Precise measurements lead to faster verification and accurate credit calculation
-                    </div>
+                ))}
+              </div>
+
+              {/* Completion Status */}
+              <div className="mt-6 p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                <div className="text-center">
+                  <div className="text-emerald-400 text-sm font-semibold mb-1">
+                    {Math.round(((currentStep - 1) / steps.length) * 100)}% Complete
                   </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <div>
-                    <div className="text-white text-sm font-medium">Save Your Progress</div>
-                    <div className="text-gray-400 text-xs">
-                      You can save at any point and return later to complete the onboarding
-                    </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-emerald-500 to-cyan-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${((currentStep - 1) / steps.length) * 100}%` }}
+                    />
                   </div>
                 </div>
               </div>

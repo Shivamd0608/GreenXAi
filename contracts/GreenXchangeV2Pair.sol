@@ -14,6 +14,9 @@ contract GreenXchangeV2Pair is ERC20, ReentrancyGuard {
     uint32 private blockTimestampLast;
 
     uint256 private constant MINIMUM_LIQUIDITY = 1000; // ✅ ADDED
+    
+    // Dead address for locking minimum liquidity (OZ v5 doesn't allow mint to address(0))
+    address private constant DEAD_ADDRESS = 0x000000000000000000000000000000000000dEaD;
 
     bool private initialized;
 
@@ -75,9 +78,10 @@ contract GreenXchangeV2Pair is ERC20, ReentrancyGuard {
         uint256 _totalSupply = totalSupply();
 
         if (_totalSupply == 0) {
-            // ✅ FIXED: Lock minimum liquidity permanently
+            // ✅ FIXED: Lock minimum liquidity permanently to dead address
+            // (OpenZeppelin ERC20 v5 doesn't allow minting to address(0))
             liquidity = _sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY;
-            _mint(address(0), MINIMUM_LIQUIDITY); // Permanently locked
+            _mint(DEAD_ADDRESS, MINIMUM_LIQUIDITY); // Permanently locked
         } else {
             liquidity = _min(
                 (amount0 * _totalSupply) / _reserve0,

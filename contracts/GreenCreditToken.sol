@@ -48,6 +48,7 @@ contract GreenCreditToken is ERC1155, Ownable {
     event MintApprovalRevoked(address indexed user, uint256 indexed tokenId);
     event TokenMinted(address indexed user, uint256 indexed tokenId, uint256 amount);
     event CreditRevoked(uint256 indexed tokenId);
+    event CreditUnrevoked(uint256 indexed tokenId);
     event TokensFrozen(address indexed user, uint256 indexed tokenId);
     event TokensUnfrozen(address indexed user, uint256 indexed tokenId);
     event TokenRetired(address indexed user, uint256 indexed tokenId, uint256 amount, string reason);
@@ -175,6 +176,13 @@ contract GreenCreditToken is ERC1155, Ownable {
         require(creditData[tokenId].exists, "Missing credit");
         creditData[tokenId].revoked = true;
         emit CreditRevoked(tokenId);
+    }
+
+    function unrevokeCredit(uint256 tokenId) external onlyOwner {
+        require(creditData[tokenId].exists, "Missing credit");
+        require(creditData[tokenId].revoked, "Not revoked");
+        creditData[tokenId].revoked = false;
+        emit CreditUnrevoked(tokenId);
     }
 
     function freezeUserToken(address user, uint256 tokenId) external onlyOwner {

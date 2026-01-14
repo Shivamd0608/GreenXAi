@@ -15,8 +15,8 @@ export async function registerCredit(tokenId, creditType, projectTitle, location
 
     // Create provider and signer
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer =  provider.getSigner();
-    const userAddress = signer.getAddress();
+  const signer =  provider.getSigner();
+  const userAddress = await signer.getAddress();
     // Create contract instance
     const contract = new ethers.Contract(CONTRACT_ADDRESS, gctabi, signer);
 
@@ -54,6 +54,10 @@ export async function approveMint(user, tokenId, amount, expiryTimestamp) {
     const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL);
 
     // 2️⃣ Load signer using private key
+    if (!PRIVATE_KEY) {
+      throw new Error('Missing PRIVATE_KEY environment variable. ApproveMint requires a private key to sign server-side transactions. Do NOT expose private keys client-side in production.');
+    }
+
     const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
     // 3️⃣ Create contract instance
