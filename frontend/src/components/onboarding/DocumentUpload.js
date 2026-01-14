@@ -5,38 +5,38 @@ import { useRouter } from 'next/navigation';
 import { registerCredit } from "@/contexts/MintToken";
 
 export default function DocumentUpload() {
-  const [uploadedDocs, setUploadedDocs] = useState({
-    projectProposal: null,
-    environmentalImpact: null,
-    feasibilityStudy: null,
-    financialDocuments: null,
-    permits: null
-  });
+  // const [uploadedDocs, setUploadedDocs] = useState({
+  //   projectProposal: null,
+  //   environmentalImpact: null,
+  //   feasibilityStudy: null,
+  //   financialDocuments: null,
+  //   permits: null
+  // });
 
   const router = useRouter();
 
-  const documentTypes = [
-    { id: 'projectProposal', name: 'Project Proposal', required: false },
-    { id: 'environmentalImpact', name: 'Environmental Impact Assessment', required: false },
-    { id: 'feasibilityStudy', name: 'Feasibility Study', required: false },
-    { id: 'financialDocuments', name: 'Financial Documents', required: false },
-    { id: 'permits', name: 'Government Permits & Licenses', required: false }
-  ];
+  // const documentTypes = [
+  //   { id: 'projectProposal', name: 'Project Proposal', required: false },
+  //   { id: 'environmentalImpact', name: 'Environmental Impact Assessment', required: false },
+  //   { id: 'feasibilityStudy', name: 'Feasibility Study', required: false },
+  //   { id: 'financialDocuments', name: 'Financial Documents', required: false },
+  //   { id: 'permits', name: 'Government Permits & Licenses', required: false }
+  // ];
 
-  const handleFileUpload = (docType, file) => {
-    setUploadedDocs(prev => ({
-      ...prev,
-      [docType]: file
-    }));
-  };
+  // const handleFileUpload = (docType, file) => {
+  //   setUploadedDocs(prev => ({
+  //     ...prev,
+  //     [docType]: file
+  //   }));
+  // };
 
-  const getUploadStatus = () => {
-    const totalRequired = documentTypes.filter(doc => doc.required).length;
-    const uploadedRequired = documentTypes.filter(doc => 
-      doc.required && uploadedDocs[doc.id]
-    ).length;
-    return { uploadedRequired, totalRequired };
-  };
+  // const getUploadStatus = () => {
+  //   const totalRequired = documentTypes.filter(doc => doc.required).length;
+  //   const uploadedRequired = documentTypes.filter(doc => 
+  //     doc.required && uploadedDocs[doc.id]
+  //   ).length;
+  //   return { uploadedRequired, totalRequired };
+  // };
 
   const projectInfo = JSON.parse(localStorage.getItem("onboardingProject"));
 
