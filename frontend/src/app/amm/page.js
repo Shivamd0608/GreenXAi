@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useWeb3 } from '@/contexts/Web3Context';
-import { useAMM } from '@/contexts/AMMContext';
-import { useFaucet } from '@/contexts/FaucetContext';
-import { useWrapper } from '@/contexts/WrapperContext';
-import { 
-  Wallet, 
-  CheckCircle, 
-  AlertCircle, 
-  ExternalLink, 
+import { useState, useEffect, useCallback } from "react";
+import { useWeb3 } from "@/contexts/Web3Context";
+import { useAMM } from "@/contexts/AMMContext";
+import { useFaucet } from "@/contexts/FaucetContext";
+import { useWrapper } from "@/contexts/WrapperContext";
+import {
+  Wallet,
+  CheckCircle,
+  AlertCircle,
+  ExternalLink,
   Loader2,
   ArrowDownUp,
   Plus,
   RefreshCw,
   Droplets,
   TrendingUp,
-  Settings
-} from 'lucide-react';
-import { CHAIN_CONFIG, CONTRACTS, DECIMALS } from '@/config/contracts';
-import { ethers } from 'ethers';
+  Settings,
+} from "lucide-react";
+import { CHAIN_CONFIG, CONTRACTS, DECIMALS } from "@/config/contracts";
+import { ethers } from "ethers";
 
 export default function AMMPage() {
   const { account, isConnected, connectWallet } = useWeb3();
@@ -43,23 +43,23 @@ export default function AMMPage() {
   const { getAllWrappers } = useWrapper();
 
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState('swap'); // 'swap', 'liquidity', 'pools'
+  const [activeTab, setActiveTab] = useState("swap"); // 'swap', 'liquidity', 'pools'
   const [availableTokens, setAvailableTokens] = useState([]);
   const [tokenBalances, setTokenBalances] = useState({});
 
   // Swap state
-  const [tokenIn, setTokenIn] = useState('');
-  const [tokenOut, setTokenOut] = useState('');
-  const [amountIn, setAmountIn] = useState('');
-  const [amountOut, setAmountOut] = useState('');
-  const [slippage, setSlippage] = useState('0.5');
+  const [tokenIn, setTokenIn] = useState("");
+  const [tokenOut, setTokenOut] = useState("");
+  const [amountIn, setAmountIn] = useState("");
+  const [amountOut, setAmountOut] = useState("");
+  const [slippage, setSlippage] = useState("0.5");
   const [swapLoading, setSwapLoading] = useState(false);
 
   // Liquidity state
-  const [liquidityTokenA, setLiquidityTokenA] = useState('');
-  const [liquidityTokenB, setLiquidityTokenB] = useState('');
-  const [liquidityAmountA, setLiquidityAmountA] = useState('');
-  const [liquidityAmountB, setLiquidityAmountB] = useState('');
+  const [liquidityTokenA, setLiquidityTokenA] = useState("");
+  const [liquidityTokenB, setLiquidityTokenB] = useState("");
+  const [liquidityAmountA, setLiquidityAmountA] = useState("");
+  const [liquidityAmountB, setLiquidityAmountB] = useState("");
 
   useEffect(() => {
     setMounted(true);
@@ -72,8 +72,8 @@ export default function AMMPage() {
     const tokens = [
       {
         address: CONTRACTS.MOCK_USDC,
-        symbol: 'mUSDC',
-        name: 'Mock USDC',
+        symbol: "mUSDC",
+        name: "Mock USDC",
         decimals: DECIMALS.MOCK_USDC,
       },
     ];
@@ -94,7 +94,11 @@ export default function AMMPage() {
     // Load balances
     const balances = {};
     for (const token of tokens) {
-      const balance = await getTokenBalance(token.address, account, token.decimals);
+      const balance = await getTokenBalance(
+        token.address,
+        account,
+        token.decimals
+      );
       balances[token.address] = balance;
     }
     setTokenBalances(balances);
@@ -110,23 +114,32 @@ export default function AMMPage() {
   useEffect(() => {
     const getQuote = async () => {
       if (!tokenIn || !tokenOut || !amountIn || parseFloat(amountIn) === 0) {
-        setAmountOut('');
+        setAmountOut("");
         return;
       }
 
       try {
-        const tokenInData = availableTokens.find(t => t.address === tokenIn);
+        const tokenInData = availableTokens.find((t) => t.address === tokenIn);
         if (!tokenInData) return;
 
-        const amounts = await getAmountsOut(amountIn, [tokenIn, tokenOut], tokenInData.decimals);
+        const amounts = await getAmountsOut(
+          amountIn,
+          [tokenIn, tokenOut],
+          tokenInData.decimals
+        );
         if (amounts.length > 1) {
-          const tokenOutData = availableTokens.find(t => t.address === tokenOut);
-          const formatted = ethers.utils.formatUnits(amounts[1], tokenOutData?.decimals || 18);
+          const tokenOutData = availableTokens.find(
+            (t) => t.address === tokenOut
+          );
+          const formatted = ethers.utils.formatUnits(
+            amounts[1],
+            tokenOutData?.decimals || 18
+          );
           setAmountOut(formatted);
         }
       } catch (err) {
-        console.error('Quote error:', err);
-        setAmountOut('');
+        console.error("Quote error:", err);
+        setAmountOut("");
       }
     };
 
@@ -141,15 +154,18 @@ export default function AMMPage() {
     clearAmmError();
 
     try {
-      const tokenInData = availableTokens.find(t => t.address === tokenIn);
-      const tokenOutData = availableTokens.find(t => t.address === tokenOut);
+      const tokenInData = availableTokens.find((t) => t.address === tokenIn);
+      const tokenOutData = availableTokens.find((t) => t.address === tokenOut);
 
       // First approve
       await approveToken(tokenIn, amountIn, tokenInData.decimals);
 
       // Calculate min amount out with slippage
       const slippagePercent = parseFloat(slippage) / 100;
-      const minAmountOut = (parseFloat(amountOut) * (1 - slippagePercent)).toString();
+      const minAmountOut = (
+        parseFloat(amountOut) *
+        (1 - slippagePercent)
+      ).toString();
 
       // Execute swap
       const result = await swapExactTokensForTokens({
@@ -161,12 +177,12 @@ export default function AMMPage() {
       });
 
       if (result) {
-        setAmountIn('');
-        setAmountOut('');
+        setAmountIn("");
+        setAmountOut("");
         await loadTokens(); // Refresh balances
       }
     } catch (err) {
-      console.error('Swap error:', err);
+      console.error("Swap error:", err);
     } finally {
       setSwapLoading(false);
     }
@@ -174,17 +190,35 @@ export default function AMMPage() {
 
   // Handle add liquidity
   const handleAddLiquidity = async () => {
-    if (!liquidityTokenA || !liquidityTokenB || !liquidityAmountA || !liquidityAmountB) return;
+    if (
+      !liquidityTokenA ||
+      !liquidityTokenB ||
+      !liquidityAmountA ||
+      !liquidityAmountB
+    )
+      return;
 
     clearAmmError();
 
     try {
-      const tokenAData = availableTokens.find(t => t.address === liquidityTokenA);
-      const tokenBData = availableTokens.find(t => t.address === liquidityTokenB);
+      const tokenAData = availableTokens.find(
+        (t) => t.address === liquidityTokenA
+      );
+      const tokenBData = availableTokens.find(
+        (t) => t.address === liquidityTokenB
+      );
 
       // Approve both tokens
-      await approveToken(liquidityTokenA, liquidityAmountA, tokenAData.decimals);
-      await approveToken(liquidityTokenB, liquidityAmountB, tokenBData.decimals);
+      await approveToken(
+        liquidityTokenA,
+        liquidityAmountA,
+        tokenAData.decimals
+      );
+      await approveToken(
+        liquidityTokenB,
+        liquidityAmountB,
+        tokenBData.decimals
+      );
 
       // Add liquidity
       const result = await addLiquidity({
@@ -197,13 +231,13 @@ export default function AMMPage() {
       });
 
       if (result) {
-        setLiquidityAmountA('');
-        setLiquidityAmountB('');
+        setLiquidityAmountA("");
+        setLiquidityAmountB("");
         await loadTokens();
         await getPools();
       }
     } catch (err) {
-      console.error('Add liquidity error:', err);
+      console.error("Add liquidity error:", err);
     }
   };
 
@@ -235,7 +269,9 @@ export default function AMMPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 mb-4">
               <TrendingUp className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">GreenX AMM</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              GreenAiDEX AMM
+            </h1>
             <p className="text-gray-400">
               Swap tokens and provide liquidity on {CHAIN_CONFIG.chainName}
             </p>
@@ -245,7 +281,9 @@ export default function AMMPage() {
             // Not Connected
             <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 text-center">
               <Wallet className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-white mb-2">Connect Your Wallet</h2>
+              <h2 className="text-xl font-semibold text-white mb-2">
+                Connect Your Wallet
+              </h2>
               <p className="text-gray-400 mb-6">Connect to start trading</p>
               <button
                 onClick={connectWallet}
@@ -258,14 +296,14 @@ export default function AMMPage() {
             <>
               {/* Tab Navigation */}
               <div className="flex bg-slate-800/50 backdrop-blur rounded-xl p-1 mb-6">
-                {['swap', 'liquidity', 'pools'].map((tab) => (
+                {["swap", "liquidity", "pools"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all capitalize ${
                       activeTab === tab
-                        ? 'bg-cyan-500 text-white'
-                        : 'text-gray-400 hover:text-white'
+                        ? "bg-cyan-500 text-white"
+                        : "text-gray-400 hover:text-white"
                     }`}
                   >
                     {tab}
@@ -275,16 +313,20 @@ export default function AMMPage() {
 
               {/* Main Card */}
               <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6">
-                
                 {/* SWAP TAB */}
-                {activeTab === 'swap' && (
+                {activeTab === "swap" && (
                   <div className="space-y-4">
                     {/* Token In */}
                     <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">From</span>
                         <span className="text-gray-500 text-sm">
-                          Balance: {tokenIn ? parseFloat(tokenBalances[tokenIn] || '0').toFixed(4) : '0'}
+                          Balance:{" "}
+                          {tokenIn
+                            ? parseFloat(tokenBalances[tokenIn] || "0").toFixed(
+                                4
+                              )
+                            : "0"}
                         </span>
                       </div>
                       <div className="flex gap-4">
@@ -325,7 +367,12 @@ export default function AMMPage() {
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">To</span>
                         <span className="text-gray-500 text-sm">
-                          Balance: {tokenOut ? parseFloat(tokenBalances[tokenOut] || '0').toFixed(4) : '0'}
+                          Balance:{" "}
+                          {tokenOut
+                            ? parseFloat(
+                                tokenBalances[tokenOut] || "0"
+                              ).toFixed(4)
+                            : "0"}
                         </span>
                       </div>
                       <div className="flex gap-4">
@@ -342,11 +389,13 @@ export default function AMMPage() {
                           className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
                         >
                           <option value="">Select</option>
-                          {availableTokens.filter(t => t.address !== tokenIn).map((token) => (
-                            <option key={token.address} value={token.address}>
-                              {token.symbol}
-                            </option>
-                          ))}
+                          {availableTokens
+                            .filter((t) => t.address !== tokenIn)
+                            .map((token) => (
+                              <option key={token.address} value={token.address}>
+                                {token.symbol}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -358,14 +407,14 @@ export default function AMMPage() {
                         Slippage Tolerance
                       </span>
                       <div className="flex gap-2">
-                        {['0.1', '0.5', '1.0'].map((val) => (
+                        {["0.1", "0.5", "1.0"].map((val) => (
                           <button
                             key={val}
                             onClick={() => setSlippage(val)}
                             className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
                               slippage === val
-                                ? 'bg-cyan-500 text-white'
-                                : 'bg-slate-800 text-gray-400 hover:text-white'
+                                ? "bg-cyan-500 text-white"
+                                : "bg-slate-800 text-gray-400 hover:text-white"
                             }`}
                           >
                             {val}%
@@ -380,15 +429,26 @@ export default function AMMPage() {
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-400">Rate</span>
                           <span className="text-white">
-                            1 {availableTokens.find(t => t.address === tokenIn)?.symbol || 'Token'} = {' '}
-                            {(parseFloat(amountOut) / parseFloat(amountIn)).toFixed(6)}{' '}
-                            {availableTokens.find(t => t.address === tokenOut)?.symbol || 'Token'}
+                            1{" "}
+                            {availableTokens.find((t) => t.address === tokenIn)
+                              ?.symbol || "Token"}{" "}
+                            ={" "}
+                            {(
+                              parseFloat(amountOut) / parseFloat(amountIn)
+                            ).toFixed(6)}{" "}
+                            {availableTokens.find((t) => t.address === tokenOut)
+                              ?.symbol || "Token"}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm mt-2">
-                          <span className="text-gray-400">Minimum received</span>
+                          <span className="text-gray-400">
+                            Minimum received
+                          </span>
                           <span className="text-white">
-                            {(parseFloat(amountOut) * (1 - parseFloat(slippage) / 100)).toFixed(6)}
+                            {(
+                              parseFloat(amountOut) *
+                              (1 - parseFloat(slippage) / 100)
+                            ).toFixed(6)}
                           </span>
                         </div>
                       </div>
@@ -416,16 +476,23 @@ export default function AMMPage() {
                 )}
 
                 {/* LIQUIDITY TAB */}
-                {activeTab === 'liquidity' && (
+                {activeTab === "liquidity" && (
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-white">Add Liquidity</h3>
-                    
+                    <h3 className="text-lg font-semibold text-white">
+                      Add Liquidity
+                    </h3>
+
                     {/* Token A */}
                     <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">Token A</span>
                         <span className="text-gray-500 text-sm">
-                          Balance: {liquidityTokenA ? parseFloat(tokenBalances[liquidityTokenA] || '0').toFixed(4) : '0'}
+                          Balance:{" "}
+                          {liquidityTokenA
+                            ? parseFloat(
+                                tokenBalances[liquidityTokenA] || "0"
+                              ).toFixed(4)
+                            : "0"}
                         </span>
                       </div>
                       <div className="flex gap-4">
@@ -463,7 +530,12 @@ export default function AMMPage() {
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">Token B</span>
                         <span className="text-gray-500 text-sm">
-                          Balance: {liquidityTokenB ? parseFloat(tokenBalances[liquidityTokenB] || '0').toFixed(4) : '0'}
+                          Balance:{" "}
+                          {liquidityTokenB
+                            ? parseFloat(
+                                tokenBalances[liquidityTokenB] || "0"
+                              ).toFixed(4)
+                            : "0"}
                         </span>
                       </div>
                       <div className="flex gap-4">
@@ -480,11 +552,13 @@ export default function AMMPage() {
                           className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
                         >
                           <option value="">Select</option>
-                          {availableTokens.filter(t => t.address !== liquidityTokenA).map((token) => (
-                            <option key={token.address} value={token.address}>
-                              {token.symbol}
-                            </option>
-                          ))}
+                          {availableTokens
+                            .filter((t) => t.address !== liquidityTokenA)
+                            .map((token) => (
+                              <option key={token.address} value={token.address}>
+                                {token.symbol}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -492,7 +566,13 @@ export default function AMMPage() {
                     {/* Add Liquidity Button */}
                     <button
                       onClick={handleAddLiquidity}
-                      disabled={loading || !liquidityTokenA || !liquidityTokenB || !liquidityAmountA || !liquidityAmountB}
+                      disabled={
+                        loading ||
+                        !liquidityTokenA ||
+                        !liquidityTokenB ||
+                        !liquidityAmountA ||
+                        !liquidityAmountB
+                      }
                       className="w-full py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {loading ? (
@@ -515,22 +595,28 @@ export default function AMMPage() {
                 )}
 
                 {/* POOLS TAB */}
-                {activeTab === 'pools' && (
+                {activeTab === "pools" && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-white">Available Pools</h3>
+                      <h3 className="text-lg font-semibold text-white">
+                        Available Pools
+                      </h3>
                       <button
                         onClick={getPools}
                         className="p-2 text-gray-400 hover:text-white transition-colors"
                       >
-                        <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+                        <RefreshCw
+                          className={`w-5 h-5 ${loading ? "animate-spin" : ""}`}
+                        />
                       </button>
                     </div>
 
                     {pools.length === 0 ? (
                       <div className="text-center py-12">
                         <Droplets className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-400">No liquidity pools found</p>
+                        <p className="text-gray-400">
+                          No liquidity pools found
+                        </p>
                         <p className="text-gray-500 text-sm mt-2">
                           Be the first to add liquidity!
                         </p>
@@ -547,22 +633,35 @@ export default function AMMPage() {
                                 {pool.symbol0}/{pool.symbol1}
                               </span>
                               <span className="text-xs text-gray-500 font-mono">
-                                {pool.address.slice(0, 8)}...{pool.address.slice(-6)}
+                                {pool.address.slice(0, 8)}...
+                                {pool.address.slice(-6)}
                               </span>
                             </div>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
-                                <span className="text-gray-400">{pool.symbol0} Reserve</span>
-                                <p className="text-white font-medium">{parseFloat(pool.reserve0).toFixed(4)}</p>
+                                <span className="text-gray-400">
+                                  {pool.symbol0} Reserve
+                                </span>
+                                <p className="text-white font-medium">
+                                  {parseFloat(pool.reserve0).toFixed(4)}
+                                </p>
                               </div>
                               <div>
-                                <span className="text-gray-400">{pool.symbol1} Reserve</span>
-                                <p className="text-white font-medium">{parseFloat(pool.reserve1).toFixed(4)}</p>
+                                <span className="text-gray-400">
+                                  {pool.symbol1} Reserve
+                                </span>
+                                <p className="text-white font-medium">
+                                  {parseFloat(pool.reserve1).toFixed(4)}
+                                </p>
                               </div>
                             </div>
                             <div className="mt-3 pt-3 border-t border-slate-700/50">
-                              <span className="text-gray-400 text-sm">Total LP Supply</span>
-                              <p className="text-white font-medium">{parseFloat(pool.totalSupply).toFixed(4)}</p>
+                              <span className="text-gray-400 text-sm">
+                                Total LP Supply
+                              </span>
+                              <p className="text-white font-medium">
+                                {parseFloat(pool.totalSupply).toFixed(4)}
+                              </p>
                             </div>
                           </div>
                         ))}
@@ -577,7 +676,7 @@ export default function AMMPage() {
                     <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-red-400">{error}</p>
-                      <button 
+                      <button
                         onClick={clearAmmError}
                         className="text-red-400/70 text-sm hover:text-red-400 mt-1"
                       >
@@ -592,7 +691,9 @@ export default function AMMPage() {
                   <div className="mt-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <p className="text-emerald-400">Transaction successful!</p>
+                      <p className="text-emerald-400">
+                        Transaction successful!
+                      </p>
                       <a
                         href={`${CHAIN_CONFIG.blockExplorerUrls[0]}/tx/${txHash}`}
                         target="_blank"
@@ -610,7 +711,9 @@ export default function AMMPage() {
               <div className="grid grid-cols-3 gap-4 mt-6">
                 <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4 text-center">
                   <p className="text-gray-400 text-sm">mUSDC Balance</p>
-                  <p className="text-xl font-bold text-white">{parseFloat(mockUsdcBalance).toFixed(2)}</p>
+                  <p className="text-xl font-bold text-white">
+                    {parseFloat(mockUsdcBalance).toFixed(2)}
+                  </p>
                 </div>
                 <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4 text-center">
                   <p className="text-gray-400 text-sm">Total Pools</p>

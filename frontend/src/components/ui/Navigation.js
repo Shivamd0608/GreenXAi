@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useWeb3 } from '../../contexts/Web3Context';
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useWeb3 } from "../../contexts/Web3Context";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -11,29 +11,29 @@ export default function Navigation() {
   const { account, isConnected, connectWallet, disconnectWallet } = useWeb3();
 
   const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Faucet', href: '/faucet' },
-    { name: 'Wrap', href: '/wrap' },
-    { name: 'AMM', href: '/amm' },
-    { name: 'Marketplace', href: '/marketplace' },
-    { name: 'Credits', href: '/green-credits' },
-    { name: 'Onboarding', href: '/onboarding' },
+    { name: "Home", href: "/" },
+    { name: "Faucet", href: "/faucet" },
+    { name: "Wrap", href: "/wrap" },
+    { name: "AMM", href: "/amm" },
+    { name: "Marketplace", href: "/marketplace" },
+    { name: "Credits", href: "/green-credits" },
+    { name: "Onboarding", href: "/onboarding" },
+    { name: "Verification", href: "/verification" },
   ];
 
   const isActive = (href) =>
-    pathname === href || pathname.startsWith(href + '/');
+    pathname === href || pathname.startsWith(href + "/");
 
   return (
     <>
       <nav className="fixed top-0 z-50 w-full border-b border-gray-800 bg-[#0b0f14]/95 backdrop-blur">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-
           {/* Brand */}
           <Link
             href="/"
             className="text-xl font-semibold tracking-tight text-gray-100"
           >
-            Green<span className="text-emerald-400">XAI</span>
+            Green<span className="text-emerald-400">AiDEX</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -44,8 +44,8 @@ export default function Navigation() {
                 href={item.href}
                 className={`text-base font-medium transition-colors ${
                   isActive(item.href)
-                    ? 'text-emerald-400'
-                    : 'text-gray-400 hover:text-gray-200'
+                    ? "text-emerald-400"
+                    : "text-gray-400 hover:text-gray-200"
                 }`}
               >
                 {item.name}
@@ -95,8 +95,8 @@ export default function Navigation() {
                   onClick={() => setMobileOpen(false)}
                   className={`block text-base font-medium ${
                     isActive(item.href)
-                      ? 'text-emerald-400'
-                      : 'text-gray-400 hover:text-gray-200'
+                      ? "text-emerald-400"
+                      : "text-gray-400 hover:text-gray-200"
                   }`}
                 >
                   {item.name}
