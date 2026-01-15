@@ -255,31 +255,31 @@ export default function AMMPage() {
   const error = ammError;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Background Effects */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 mb-4">
               <TrendingUp className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
               GreenAiDEX AMM
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-300">
               Swap tokens and provide liquidity on {CHAIN_CONFIG.chainName}
             </p>
           </div>
 
           {!isConnected ? (
             // Not Connected
-            <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 text-center">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-2xl p-8 text-center backdrop-blur-sm">
               <Wallet className="w-16 h-16 text-gray-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-white mb-2">
                 Connect Your Wallet
@@ -287,7 +287,7 @@ export default function AMMPage() {
               <p className="text-gray-400 mb-6">Connect to start trading</p>
               <button
                 onClick={connectWallet}
-                className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+                className="px-8 py-3 bg-gradient-to-br from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-semibold rounded-xl transition-all duration-300 border border-gray-500"
               >
                 Connect Wallet
               </button>
@@ -295,14 +295,14 @@ export default function AMMPage() {
           ) : (
             <>
               {/* Tab Navigation */}
-              <div className="flex bg-slate-800/50 backdrop-blur rounded-xl p-1 mb-6">
+              <div className="flex bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl p-1 mb-6 backdrop-blur-sm border border-gray-600">
                 {["swap", "liquidity", "pools"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all capitalize ${
                       activeTab === tab
-                        ? "bg-cyan-500 text-white"
+                        ? "bg-gradient-to-br from-emerald-500 to-cyan-500 text-white"
                         : "text-gray-400 hover:text-white"
                     }`}
                   >
@@ -312,12 +312,12 @@ export default function AMMPage() {
               </div>
 
               {/* Main Card */}
-              <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6">
+              <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-2xl p-6 backdrop-blur-sm">
                 {/* SWAP TAB */}
                 {activeTab === "swap" && (
                   <div className="space-y-4">
                     {/* Token In */}
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">From</span>
                         <span className="text-gray-500 text-sm">
@@ -335,12 +335,12 @@ export default function AMMPage() {
                           value={amountIn}
                           onChange={(e) => setAmountIn(e.target.value)}
                           placeholder="0.0"
-                          className="flex-1 bg-transparent text-2xl font-semibold text-white outline-none placeholder-gray-600"
+                          className="flex-1 bg-transparent text-2xl font-semibold text-white outline-none placeholder-gray-500"
                         />
                         <select
                           value={tokenIn}
                           onChange={(e) => setTokenIn(e.target.value)}
-                          className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                          className="bg-gradient-to-br from-gray-700 to-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-emerald-500"
                         >
                           <option value="">Select</option>
                           {availableTokens.map((token) => (
@@ -356,14 +356,14 @@ export default function AMMPage() {
                     <div className="flex justify-center">
                       <button
                         onClick={handleFlipTokens}
-                        className="p-2 bg-slate-900 border border-slate-700 rounded-lg hover:border-cyan-500 transition-colors"
+                        className="p-2 bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-lg hover:border-emerald-500 transition-colors"
                       >
                         <ArrowDownUp className="w-5 h-5 text-gray-400" />
                       </button>
                     </div>
 
                     {/* Token Out */}
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">To</span>
                         <span className="text-gray-500 text-sm">
@@ -381,12 +381,12 @@ export default function AMMPage() {
                           value={amountOut}
                           readOnly
                           placeholder="0.0"
-                          className="flex-1 bg-transparent text-2xl font-semibold text-white outline-none placeholder-gray-600"
+                          className="flex-1 bg-transparent text-2xl font-semibold text-white outline-none placeholder-gray-500"
                         />
                         <select
                           value={tokenOut}
                           onChange={(e) => setTokenOut(e.target.value)}
-                          className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                          className="bg-gradient-to-br from-gray-700 to-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-emerald-500"
                         >
                           <option value="">Select</option>
                           {availableTokens
@@ -401,7 +401,7 @@ export default function AMMPage() {
                     </div>
 
                     {/* Slippage Settings */}
-                    <div className="flex items-center justify-between bg-slate-900/30 rounded-lg p-3">
+                    <div className="flex items-center justify-between bg-gradient-to-br from-gray-800/30 to-gray-700/30 rounded-lg p-3 border border-gray-600/50">
                       <span className="text-gray-400 text-sm flex items-center gap-2">
                         <Settings className="w-4 h-4" />
                         Slippage Tolerance
@@ -413,8 +413,8 @@ export default function AMMPage() {
                             onClick={() => setSlippage(val)}
                             className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
                               slippage === val
-                                ? "bg-cyan-500 text-white"
-                                : "bg-slate-800 text-gray-400 hover:text-white"
+                                ? "bg-gradient-to-br from-emerald-500 to-cyan-500 text-white"
+                                : "bg-gradient-to-br from-gray-700 to-gray-600 text-gray-400 hover:text-white border border-gray-600"
                             }`}
                           >
                             {val}%
@@ -425,7 +425,7 @@ export default function AMMPage() {
 
                     {/* Price Info */}
                     {amountIn && amountOut && parseFloat(amountIn) > 0 && (
-                      <div className="bg-slate-900/30 rounded-lg p-3">
+                      <div className="bg-gradient-to-br from-gray-800/30 to-gray-700/30 rounded-lg p-3 border border-gray-600/50">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-400">Rate</span>
                           <span className="text-white">
@@ -458,7 +458,7 @@ export default function AMMPage() {
                     <button
                       onClick={handleSwap}
                       disabled={loading || !tokenIn || !tokenOut || !amountIn}
-                      className="w-full py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-gradient-to-br from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-500/30"
                     >
                       {loading ? (
                         <>
@@ -483,7 +483,7 @@ export default function AMMPage() {
                     </h3>
 
                     {/* Token A */}
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">Token A</span>
                         <span className="text-gray-500 text-sm">
@@ -501,12 +501,12 @@ export default function AMMPage() {
                           value={liquidityAmountA}
                           onChange={(e) => setLiquidityAmountA(e.target.value)}
                           placeholder="0.0"
-                          className="flex-1 bg-transparent text-xl font-semibold text-white outline-none placeholder-gray-600"
+                          className="flex-1 bg-transparent text-xl font-semibold text-white outline-none placeholder-gray-500"
                         />
                         <select
                           value={liquidityTokenA}
                           onChange={(e) => setLiquidityTokenA(e.target.value)}
-                          className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                          className="bg-gradient-to-br from-gray-700 to-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-emerald-500"
                         >
                           <option value="">Select</option>
                           {availableTokens.map((token) => (
@@ -520,13 +520,13 @@ export default function AMMPage() {
 
                     {/* Plus Icon */}
                     <div className="flex justify-center">
-                      <div className="p-2 bg-slate-900 border border-slate-700 rounded-lg">
+                      <div className="p-2 bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-lg">
                         <Plus className="w-5 h-5 text-gray-400" />
                       </div>
                     </div>
 
                     {/* Token B */}
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                       <div className="flex justify-between mb-2">
                         <span className="text-gray-400 text-sm">Token B</span>
                         <span className="text-gray-500 text-sm">
@@ -544,12 +544,12 @@ export default function AMMPage() {
                           value={liquidityAmountB}
                           onChange={(e) => setLiquidityAmountB(e.target.value)}
                           placeholder="0.0"
-                          className="flex-1 bg-transparent text-xl font-semibold text-white outline-none placeholder-gray-600"
+                          className="flex-1 bg-transparent text-xl font-semibold text-white outline-none placeholder-gray-500"
                         />
                         <select
                           value={liquidityTokenB}
                           onChange={(e) => setLiquidityTokenB(e.target.value)}
-                          className="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-cyan-500"
+                          className="bg-gradient-to-br from-gray-700 to-gray-600 border border-gray-500 rounded-lg px-3 py-2 text-white font-medium focus:outline-none focus:border-emerald-500"
                         >
                           <option value="">Select</option>
                           {availableTokens
@@ -573,7 +573,7 @@ export default function AMMPage() {
                         !liquidityAmountA ||
                         !liquidityAmountB
                       }
-                      className="w-full py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-gradient-to-br from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-500/30"
                     >
                       {loading ? (
                         <>
@@ -626,7 +626,7 @@ export default function AMMPage() {
                         {pools.map((pool) => (
                           <div
                             key={pool.address}
-                            className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50"
+                            className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600"
                           >
                             <div className="flex items-center justify-between mb-3">
                               <span className="font-semibold text-white">
@@ -655,7 +655,7 @@ export default function AMMPage() {
                                 </p>
                               </div>
                             </div>
-                            <div className="mt-3 pt-3 border-t border-slate-700/50">
+                            <div className="mt-3 pt-3 border-t border-gray-600/50">
                               <span className="text-gray-400 text-sm">
                                 Total LP Supply
                               </span>
@@ -672,7 +672,7 @@ export default function AMMPage() {
 
                 {/* Error Message */}
                 {error && (
-                  <div className="mt-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
+                  <div className="mt-6 bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-red-400">{error}</p>
@@ -688,7 +688,7 @@ export default function AMMPage() {
 
                 {/* Success Message */}
                 {txHash && !error && (
-                  <div className="mt-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-start gap-3">
+                  <div className="mt-6 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <p className="text-emerald-400">
@@ -709,17 +709,17 @@ export default function AMMPage() {
 
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-4 mt-6">
-                <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4 text-center">
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 text-center backdrop-blur-sm">
                   <p className="text-gray-400 text-sm">mUSDC Balance</p>
                   <p className="text-xl font-bold text-white">
                     {parseFloat(mockUsdcBalance).toFixed(2)}
                   </p>
                 </div>
-                <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4 text-center">
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 text-center backdrop-blur-sm">
                   <p className="text-gray-400 text-sm">Total Pools</p>
                   <p className="text-xl font-bold text-white">{pools.length}</p>
                 </div>
-                <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4 text-center">
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 text-center backdrop-blur-sm">
                   <p className="text-gray-400 text-sm">LP Fee</p>
                   <p className="text-xl font-bold text-white">0.3%</p>
                 </div>
