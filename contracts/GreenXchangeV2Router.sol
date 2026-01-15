@@ -80,7 +80,7 @@ contract GreenXchangeV2Router {
             (amountA, amountB) = (amountADesired, amountBDesired);
         } else {
             // Existing pair - calculate optimal amounts
-            (uint112 reserveA, uint112 reserveB, ) = GreenXchangeV2Pair(pair).getReserves();
+            (uint112 reserveA, uint112 reserveB ) = GreenXchangeV2Pair(pair).getReserves();
             
             // ✅ FIXED: Properly handle token ordering
             address token0 = address(GreenXchangeV2Pair(pair).token0());
@@ -266,7 +266,7 @@ contract GreenXchangeV2Router {
             address pair = factory.getPair(path[i], path[i + 1]);
             require(pair != address(0), "PAIR_NOT_FOUND");
 
-            (uint112 reserve0, uint112 reserve1, ) = GreenXchangeV2Pair(pair).getReserves();
+            (uint112 reserve0, uint112 reserve1 ) = GreenXchangeV2Pair(pair).getReserves();
             
             // ✅ FIXED: Properly handle token ordering
             address token0 = address(GreenXchangeV2Pair(pair).token0());

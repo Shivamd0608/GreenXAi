@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 
 
-const CONTRACT_ADDRESS = "0xa82fA397006c6314B0bfFCBAA06FbfbcC805b619";
+// const CONTRACT_ADDRESS = "0xa82fA397006c6314B0bfFCBAA06FbfbcC805b619";
+const CONTRACT_ADDRESS= process.env.NEXT_PUBLIC_GREEN_CREDIT_TOKEN  
 import gctabi from "../../../ABI/GreenCreditTokenAbi"; 
 
 // ⚠️ Replace with your private key (keep this in .env.local, NEVER hardcode!)
@@ -14,8 +15,8 @@ export async function registerCredit(tokenId, creditType, projectTitle, location
 
     // Create provider and signer
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = await provider.getSigner();
-    const userAddress = signer.getAddress();
+  const signer =  provider.getSigner();
+  const userAddress = await signer.getAddress();
     // Create contract instance
     const contract = new ethers.Contract(CONTRACT_ADDRESS, gctabi, signer);
 
@@ -36,7 +37,7 @@ export async function registerCredit(tokenId, creditType, projectTitle, location
     const receipt = await tx.wait();
     console.log("✅ Transaction confirmed:", receipt);
 
-  await approveMint(userAddress,tokenId,1000,1861316834);
+  await approveMint(userAddress,tokenId,100000,1861316834);
     console.log("✅ Aprooved Mint transaction successful")
 
     return receipt;
@@ -53,6 +54,10 @@ export async function approveMint(user, tokenId, amount, expiryTimestamp) {
     const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL);
 
     // 2️⃣ Load signer using private key
+    if (!PRIVATE_KEY) {
+      throw new Error('Missing PRIVATE_KEY environment variable. ApproveMint requires a private key to sign server-side transactions. Do NOT expose private keys client-side in production.');
+    }
+
     const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
     // 3️⃣ Create contract instance

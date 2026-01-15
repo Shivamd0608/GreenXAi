@@ -11,10 +11,10 @@ export const CONTRACTS = {
   // ─────────────────────────────────────────────────────────────
   
   // ERC-1155 Green Credit Token (existing)
-  GREEN_CREDIT_TOKEN: "0xa82fA397006c6314B0bfFCBAA06FbfbcC805b619",
+  GREEN_CREDIT_TOKEN: process.env.NEXT_PUBLIC_GREEN_CREDIT_TOKEN,
   
   // Orderbook for direct trading (existing)
-  ORDERBOOK: "0x5606f038a656684746f0F8a6e5eEf058de2fe05c",
+  ORDERBOOK: process.env.NEXT_PUBLIC_ORDERBOOK,
 
   // ─────────────────────────────────────────────────────────────
   // NEW CONTRACTS (Update after deployment)
@@ -22,19 +22,19 @@ export const CONTRACTS = {
   
   // MockUSDC - Faucet-enabled stablecoin for testing
   // Deploy MockUSDC.sol and paste address here
-  MOCK_USDC: "0x0000000000000000000000000000000000000000",
+  MOCK_USDC: process.env.NEXT_PUBLIC_MOCK_USDC,
   
   // Wrapper Factory - Creates ERC-20 wrappers for ERC-1155 tokens
   // Deploy WrappedGreenCreditFactory.sol and paste address here
-  WRAPPED_GREEN_CREDIT_FACTORY: "0x0000000000000000000000000000000000000000",
+  WRAPPED_GREEN_CREDIT_FACTORY: process.env.NEXT_PUBLIC_WRAPPED_GREEN_CREDIT_FACTORY,
   
   // AMM Factory - Creates trading pairs (Uniswap V2 style)
   // Deploy GreenXchangeV2Factory.sol and paste address here
-  AMM_FACTORY: "0x0000000000000000000000000000000000000000",
+  AMM_FACTORY: process.env.NEXT_PUBLIC_AMM_FACTORY,
   
   // AMM Router - Handles swaps and liquidity
   // Deploy GreenXchangeV2Router.sol and paste address here
-  AMM_ROUTER: "0x0000000000000000000000000000000000000000",
+  AMM_ROUTER: process.env.NEXT_PUBLIC_AMM_ROUTER,
 };
 
 // ============================================================

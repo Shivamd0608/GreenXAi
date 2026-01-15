@@ -24,8 +24,8 @@ contract GreenXchangeOrderbook is
         uint256 orderId;
         address maker;
         uint256 tokenId;
-        bool isBuy; // true = buy (maker locks PYUSD), false = sell (maker locks credits)
-        uint256 price; // price per credit in PYUSD smallest unit
+        bool isBuy; // true = buy (maker locks mUSDC), false = sell (maker locks credits)
+        uint256 price; // price per credit in mUSDC smallest unit
         uint256 amount; // total credits
         uint256 filled; // filled amount
         uint256 timestamp;
@@ -35,15 +35,15 @@ contract GreenXchangeOrderbook is
     }
 
     GreenCreditToken public credits;
-    IERC20 public pyusd;
-    uint8 public pyusdDecimals;
+    IERC20 public mUSDC;
+    uint8 public mUSDCDecimals;
 
     uint256 public nextOrderId;
     mapping(uint256 => Order) public orders;
     mapping(uint256 => bool) public orderActive;
 
     // escrow bookkeeping
-    mapping(uint256 => uint256) public escrowedPYUSDByOrder;
+    mapping(uint256 => uint256) public escrowedmUSDCByOrder;
     mapping(uint256 => uint256) public escrowedCreditsByOrder;
 
     // price levels / order book indices
@@ -51,11 +51,11 @@ contract GreenXchangeOrderbook is
     mapping(uint256 => mapping(uint256 => uint256[])) public ordersAtPrice; // tokenId => price => orderIds
 
     // per-user escrow tracking
-    mapping(address => uint256) public pyusdEscrowed;
+    mapping(address => uint256) public mUSDCEscrowed;
     mapping(address => mapping(uint256 => uint256)) public creditsEscrowed; // user => tokenId => amount
 
-    // Sepolia PYUSD default (if address(0))
-    address public constant SEPOLIA_PYUSD = 0xCaC524BcA292aaade2DF8A05cC58F0a65B1B3bB9;
+    // Sepolia mUSDC default (if address(0))
+    address public constant SEPOLIA_mUSDC = 0x5454F2f16B3dCEEb0d74Df8e5b9e17f19d793CcE;
 
     // Events
     event OrderPlaced(
@@ -78,16 +78,16 @@ contract GreenXchangeOrderbook is
         uint256 price,
         uint256 amount
     );
-    event PYUSDEscrowed(uint256 indexed orderId, address indexed maker, uint256 amount);
+    event mUSDCescrowed(uint256 indexed orderId, address indexed maker, uint256 amount);
     event CreditsEscrowed(uint256 indexed orderId, address indexed maker, uint256 tokenId, uint256 amount);
-    event PYUSDWithdrawn(address indexed to, uint256 amount);
+    event mUSDCWithdrawn(address indexed to, uint256 amount);
 
     /// @notice Deploy constructor with all initializations
     constructor(
         address admin,
         address creditsAddress,
-        address pyusdAddress,
-        uint8 _pyusdDecimals
+        address mUSDCAddress,
+        uint8 _mUSDCDecimals
     ) {
         require(admin != address(0), "zero admin");
         require(creditsAddress != address(0), "zero credits");
@@ -97,9 +97,9 @@ contract GreenXchangeOrderbook is
 
         credits = GreenCreditToken(payable(creditsAddress));
 
-        if (pyusdAddress == address(0)) pyusdAddress = SEPOLIA_PYUSD;
-        pyusd = IERC20(pyusdAddress);
-        pyusdDecimals = _pyusdDecimals;
+        if (mUSDCAddress == address(0)) mUSDCAddress = SEPOLIA_mUSDC;
+        mUSDC = IERC20(mUSDCAddress);
+        mUSDCDecimals = _mUSDCDecimals;
 
         nextOrderId = 1;
     }
@@ -107,19 +107,19 @@ contract GreenXchangeOrderbook is
     // -------------------------
     // Admin
     // -------------------------
-    function setPYUSD(address tokenAddr, uint8 decimals_) external onlyRole(MANAGER_ROLE) {
+    function setmUSDC(address tokenAddr, uint8 decimals_) external onlyRole(MANAGER_ROLE) {
         require(tokenAddr != address(0), "zero addr");
-        pyusd = IERC20(tokenAddr);
-        pyusdDecimals = decimals_;
+        mUSDC = IERC20(tokenAddr);
+        mUSDCDecimals = decimals_;
     }
 
-    /// @notice Withdraw accumulated PYUSD from the contract
-    function withdrawPYUSD(address to, uint256 amount) external onlyRole(MANAGER_ROLE) {
+    /// @notice Withdraw accumulated mUSDC from the contract
+    function withdrawmUSDC(address to, uint256 amount) external onlyRole(MANAGER_ROLE) {
         require(to != address(0), "zero to");
-        uint256 bal = pyusd.balanceOf(address(this));
+        uint256 bal = mUSDC.balanceOf(address(this));
         require(amount <= bal, "insufficient balance");
-        pyusd.safeTransfer(to, amount);
-        emit PYUSDWithdrawn(to, amount);
+        mUSDC.safeTransfer(to, amount);
+        emit mUSDCWithdrawn(to, amount);
     }
 
     // -------------------------
@@ -160,10 +160,10 @@ contract GreenXchangeOrderbook is
 
         if (isBuy) {
             uint256 cost = _mulSafe(price, amount);
-            pyusd.safeTransferFrom(msg.sender, address(this), cost);
-            escrowedPYUSDByOrder[orderId] = cost;
-            pyusdEscrowed[msg.sender] += cost;
-            emit PYUSDEscrowed(orderId, msg.sender, cost);
+            mUSDC.safeTransferFrom(msg.sender, address(this), cost);
+            escrowedmUSDCByOrder[orderId] = cost;
+            mUSDCEscrowed[msg.sender] += cost;
+            emit mUSDCescrowed(orderId, msg.sender, cost);
         } else {
             credits.safeTransferFrom(msg.sender, address(this), tokenId, amount, "");
             escrowedCreditsByOrder[orderId] = amount;
@@ -191,11 +191,11 @@ contract GreenXchangeOrderbook is
         orderActive[orderId] = false;
 
         if (o.isBuy) {
-            uint256 locked = escrowedPYUSDByOrder[orderId];
+            uint256 locked = escrowedmUSDCByOrder[orderId];
             if (locked > 0) {
-                escrowedPYUSDByOrder[orderId] = 0;
-                pyusdEscrowed[o.maker] -= locked;
-                pyusd.safeTransfer(o.maker, locked);
+                escrowedmUSDCByOrder[orderId] = 0;
+                mUSDCEscrowed[o.maker] -= locked;
+                mUSDC.safeTransfer(o.maker, locked);
             }
         } else {
             uint256 locked = escrowedCreditsByOrder[orderId];
@@ -241,10 +241,10 @@ contract GreenXchangeOrderbook is
 
         uint256 tradeValue = _mulSafe(makerOrder.price, fillAmount);
 
-        escrowedPYUSDByOrder[makerOrderId] -= tradeValue;
-        pyusdEscrowed[makerOrder.maker] -= tradeValue;
+        escrowedmUSDCByOrder[makerOrderId] -= tradeValue;
+        mUSDCEscrowed[makerOrder.maker] -= tradeValue;
 
-        pyusd.safeTransfer(msg.sender, tradeValue);
+        mUSDC.safeTransfer(msg.sender, tradeValue);
 
         makerOrder.filled += fillAmount;
 
@@ -256,7 +256,7 @@ contract GreenXchangeOrderbook is
 
         uint256 tradeValue = _mulSafe(makerOrder.price, fillAmount);
 
-        pyusd.safeTransferFrom(msg.sender, makerOrder.maker, tradeValue);
+        mUSDC.safeTransferFrom(msg.sender, makerOrder.maker, tradeValue);
 
         escrowedCreditsByOrder[makerOrderId] -= fillAmount;
         creditsEscrowed[makerOrder.maker][tokenId] -= fillAmount;
