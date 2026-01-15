@@ -15,6 +15,7 @@ interface IGreenCreditToken is IERC1155 {
         string projectTitle;
         string location;
         string certificateHash;
+        address registrar;  // ← ADDED: was missing, causing ABI mismatch
         bool exists;
         bool revoked;
     }
