@@ -59,7 +59,7 @@ export default function FaucetPage() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* Background Effects */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -76,13 +76,13 @@ export default function FaucetPage() {
             <h1 className="text-4xl font-bold text-white mb-4">
               MockUSDC Faucet
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-300 text-lg">
               Get test mUSDC tokens for trading on {CHAIN_CONFIG.chainName}
             </p>
           </div>
 
           {/* Main Card */}
-          <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 shadow-2xl">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-2xl p-8 shadow-lg backdrop-blur-sm">
             {!isConnected ? (
               // Not Connected State
               <div className="text-center py-8">
@@ -95,7 +95,7 @@ export default function FaucetPage() {
                 </p>
                 <button
                   onClick={connectWallet}
-                  className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+                  className="px-8 py-3 bg-gradient-to-br from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-semibold rounded-xl transition-all duration-300 border border-gray-500"
                 >
                   Connect Wallet
                 </button>
@@ -104,7 +104,7 @@ export default function FaucetPage() {
               // Connected State
               <div className="space-y-6">
                 {/* Wallet Info */}
-                <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400">Connected Wallet</span>
                     <span className="text-white font-mono text-sm">
@@ -130,7 +130,7 @@ export default function FaucetPage() {
                         {parseFloat(mockUsdcBalance).toLocaleString()} mUSDC
                       </p>
                     </div>
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
                       <span className="text-2xl">💵</span>
                     </div>
                   </div>
@@ -139,14 +139,14 @@ export default function FaucetPage() {
                 {/* Faucet Info */}
                 {faucetInfo && (
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                       <p className="text-gray-400 text-sm">Amount per Claim</p>
                       <p className="text-xl font-semibold text-white mt-1">
                         {parseFloat(faucetInfo.faucetAmount).toLocaleString()}{" "}
                         mUSDC
                       </p>
                     </div>
-                    <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
+                    <div className="bg-gradient-to-br from-gray-800/50 to-gray-700/50 rounded-xl p-4 border border-gray-600">
                       <p className="text-gray-400 text-sm">Cooldown</p>
                       <p className="text-xl font-semibold text-white mt-1 flex items-center gap-2">
                         <Clock className="w-5 h-5 text-cyan-400" />
@@ -160,7 +160,7 @@ export default function FaucetPage() {
 
                 {/* Error Message */}
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
+                  <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-red-400">{error}</p>
@@ -176,7 +176,7 @@ export default function FaucetPage() {
 
                 {/* Success Message */}
                 {txHash && !error && (
-                  <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-start gap-3">
+                  <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <p className="text-emerald-400">
@@ -198,7 +198,7 @@ export default function FaucetPage() {
                 <button
                   onClick={handleClaim}
                   disabled={loading || (faucetInfo && !faucetInfo.canClaim)}
-                  className="w-full py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-gradient-to-br from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-500/30"
                 >
                   {loading ? (
                     <>
@@ -223,19 +223,19 @@ export default function FaucetPage() {
 
           {/* Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-            <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 backdrop-blur-sm">
               <h3 className="font-semibold text-white mb-2">💧 Free Tokens</h3>
               <p className="text-sm text-gray-400">
                 Claim test mUSDC tokens every 2 minutes for free
               </p>
             </div>
-            <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 backdrop-blur-sm">
               <h3 className="font-semibold text-white mb-2">🔄 Use in AMM</h3>
               <p className="text-sm text-gray-400">
                 Add liquidity or swap tokens on GreenAiDEX
               </p>
             </div>
-            <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 rounded-xl p-4 backdrop-blur-sm">
               <h3 className="font-semibold text-white mb-2">
                 📊 Trade Credits
               </h3>
@@ -247,7 +247,7 @@ export default function FaucetPage() {
 
           {/* Network Info */}
           <div className="mt-8 text-center">
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-400 text-sm">
               Connected to{" "}
               <span className="text-cyan-400">{CHAIN_CONFIG.chainName}</span>
             </p>
