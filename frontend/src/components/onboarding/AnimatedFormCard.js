@@ -1,14 +1,14 @@
 // components/onboarding/AnimatedFormCard.js
-'use client';
-import { useEffect, useRef, useState } from 'react';
+"use client";
+import { useEffect, useRef, useState } from "react";
 
-export default function AnimatedFormCard({ 
-  title, 
-  subtitle, 
+export default function AnimatedFormCard({
+  title,
+  subtitle,
   icon,
   stepNumber,
   isActive = true,
-  onClick 
+  onClick,
 }) {
   const cardRef = useRef();
   const [isVisible, setIsVisible] = useState(false);
@@ -33,7 +33,7 @@ export default function AnimatedFormCard({
 
   const handleMouseMove = (e) => {
     if (!isActive) return;
-    
+
     const card = cardRef.current;
     if (!card) return;
 
@@ -60,7 +60,8 @@ export default function AnimatedFormCard({
   const handleMouseLeave = () => {
     const card = cardRef.current;
     if (card) {
-      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+      card.style.transform =
+        "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
     }
   };
 
@@ -80,15 +81,21 @@ export default function AnimatedFormCard({
         relative bg-gradient-to-br from-gray-900 to-black
         rounded-2xl border-2 border-gray-700 p-6 shadow-2xl backdrop-blur-sm
         transition-all duration-300 ease-out overflow-hidden
-        ${isVisible ? 'opacity-100' : 'opacity-0'}
-        ${isActive ? 'cursor-pointer hover:border-emerald-500' : 'cursor-default'}
+        ${isVisible ? "opacity-100" : "opacity-0"}
+        ${
+          isActive
+            ? "cursor-pointer hover:border-emerald-500"
+            : "cursor-default"
+        }
         w-full max-w-sm mx-auto
       `}
       style={{
-        transformStyle: 'preserve-3d',
-        transition: 'transform 0.3s ease, opacity 0.6s ease, border-color 0.3s ease',
-        height: '240px',
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)'
+        transformStyle: "preserve-3d",
+        transition:
+          "transform 0.3s ease, opacity 0.6s ease, border-color 0.3s ease",
+        height: "240px",
+        background:
+          "linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)",
       }}
     >
       {/* Card Header - Clean and spaced */}
@@ -97,7 +104,7 @@ export default function AnimatedFormCard({
           <div className="w-6 h-6 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded flex items-center justify-center">
             <span className="text-white text-xs font-bold">GX</span>
           </div>
-          <div className="text-white text-sm font-bold">GreenXchange</div>
+          <div className="text-white text-sm font-bold">GreenAiDEX</div>
         </div>
         <div className="bg-gradient-to-r from-emerald-500 to-cyan-500 text-black text-xs px-2 py-1 rounded-full font-bold">
           STEP {stepNumber}
@@ -109,7 +116,9 @@ export default function AnimatedFormCard({
         <div className="w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
           <span className="text-2xl text-emerald-400">{icon}</span>
         </div>
-        <h2 className="text-xl font-bold text-white mb-2 leading-tight">{title}</h2>
+        <h2 className="text-xl font-bold text-white mb-2 leading-tight">
+          {title}
+        </h2>
         <p className="text-gray-400 text-sm leading-relaxed">{subtitle}</p>
       </div>
 
@@ -136,7 +145,9 @@ export default function AnimatedFormCard({
       <div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 transition-opacity duration-500 pointer-events-none"
         style={{
-          transform: `translateX(${mousePosition.x - 150}px) translateY(${mousePosition.y - 150}px)`,
+          transform: `translateX(${mousePosition.x - 150}px) translateY(${
+            mousePosition.y - 150
+          }px)`,
         }}
       />
     </div>

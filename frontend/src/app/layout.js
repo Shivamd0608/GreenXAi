@@ -9,7 +9,7 @@ import Navigation from "../components/ui/Navigation";
 import AIChatFloating from "../components/AIChatFloating";
 
 export const metadata = {
-  title: "GreenXAI - Green Credit Trading Platform",
+  title: "GreenAiDEX - Green Credit Trading Platform",
   description: "Tokenize, wrap, and trade green credits on Mantle L2",
 };
 

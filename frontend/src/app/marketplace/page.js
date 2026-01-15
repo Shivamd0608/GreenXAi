@@ -431,7 +431,7 @@ export default function MarketplaceClient() {
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">GreenXchange</h1>
+                <h1 className="text-3xl font-bold text-white">GreenAiDEX</h1>
                 <p className="text-slate-400 text-sm">
                   Trade Green Credits with mUSDC
                 </p>
