@@ -26,21 +26,21 @@ const StepIndicator = ({ step, currentStep, title, completed }) => {
   return (
     <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
       isActive 
-        ? 'bg-emerald-500/10 border-emerald-500/50' 
+        ? 'bg-gradient-to-br from-white/10 to-white/5 border-white/30' 
         : isCompleted 
-          ? 'bg-slate-800/50 border-emerald-500/30' 
-          : 'bg-slate-800/30 border-slate-700/50'
+          ? 'bg-gradient-to-br from-white/5 to-white/2 border-white/20' 
+          : 'bg-gradient-to-br from-white/5 to-white/2 border-white/10'
     }`}>
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border ${
         isCompleted 
-          ? 'bg-emerald-500 text-white' 
+          ? 'bg-white text-[#1F2937] border-white' 
           : isActive 
-            ? 'bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500' 
-            : 'bg-slate-700 text-gray-400'
+            ? 'bg-gradient-to-br from-white/20 to-white/10 text-white border-2 border-white' 
+            : 'bg-gradient-to-br from-white/5 to-white/2 text-gray-400 border-white/10'
       }`}>
         {isCompleted ? <CheckCircle className="w-5 h-5" /> : step}
       </div>
-      <span className={`font-medium ${isActive || isCompleted ? 'text-white' : 'text-gray-500'}`}>
+      <span className={`font-medium ${isActive || isCompleted ? 'text-white' : 'text-gray-400'}`}>
         {title}
       </span>
     </div>
@@ -195,35 +195,35 @@ export default function WrapPage() {
   const currentWrappedBalance = wrappedBalances[currentWrapperAddress] || '0';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-[#111827] via-[#1F2937] to-[#374151]">
       {/* Background Effects */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-emerald-500 mb-6">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-white/20 to-white/10 mb-6 border border-white/20">
               <Package className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">Wrap Green Credits</h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-300 text-lg">
               Convert ERC-1155 credits to ERC-20 for DeFi compatibility
             </p>
           </div>
 
           {!isConnected ? (
             // Not Connected State
-            <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 text-center">
-              <Wallet className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-8 text-center">
+              <Wallet className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-white mb-2">Connect Your Wallet</h2>
-              <p className="text-gray-400 mb-6">Connect your wallet to wrap green credits</p>
+              <p className="text-gray-300 mb-6">Connect your wallet to wrap green credits</p>
               <button
                 onClick={connectWallet}
-                className="px-8 py-3 bg-gradient-to-r from-purple-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity"
+                className="px-8 py-3 bg-gradient-to-r from-[#374151] to-[#1F2937] hover:from-[#4B5563] hover:to-[#374151] text-white font-semibold rounded-xl transition-all border border-white/20"
               >
                 Connect Wallet
               </button>
@@ -248,13 +248,13 @@ export default function WrapPage() {
                           onClick={() => handleSelectWrapper(wrapper)}
                           className={`w-full text-left p-3 rounded-xl border transition-all ${
                             selectedWrapper?.address === wrapper.address
-                              ? 'bg-purple-500/20 border-purple-500/50'
-                              : 'bg-slate-800/50 border-slate-700/50 hover:border-purple-500/30'
+                              ? 'bg-gradient-to-br from-white/20 to-white/10 border-white/30'
+                              : 'bg-gradient-to-br from-white/5 to-white/2 border-white/10 hover:border-white/30'
                           }`}
                         >
                           <p className="font-medium text-white">{wrapper.symbol}</p>
-                          <p className="text-xs text-gray-400 truncate">{wrapper.address}</p>
-                          <p className="text-xs text-purple-400">Token ID: {wrapper.tokenId}</p>
+                          <p className="text-xs text-gray-300 truncate">{wrapper.address}</p>
+                          <p className="text-xs text-white/60">Token ID: {wrapper.tokenId}</p>
                         </button>
                       ))}
                     </div>
@@ -264,25 +264,25 @@ export default function WrapPage() {
 
               {/* Right Column - Main Content */}
               <div className="lg:col-span-2">
-                <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6">
+                <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6">
                   {/* Mode Toggle */}
-                  <div className="flex bg-slate-900/50 rounded-xl p-1 mb-6">
+                  <div className="flex bg-gradient-to-br from-white/5 to-white/2 rounded-xl p-1 mb-6">
                     <button
                       onClick={() => setMode('wrap')}
-                      className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                      className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all border ${
                         mode === 'wrap'
-                          ? 'bg-purple-500 text-white'
-                          : 'text-gray-400 hover:text-white'
+                          ? 'bg-gradient-to-br from-white/20 to-white/10 text-white border-white/30'
+                          : 'text-gray-400 hover:text-white border-transparent'
                       }`}
                     >
                       Wrap
                     </button>
                     <button
                       onClick={() => setMode('unwrap')}
-                      className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                      className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all border ${
                         mode === 'unwrap'
-                          ? 'bg-purple-500 text-white'
-                          : 'text-gray-400 hover:text-white'
+                          ? 'bg-gradient-to-br from-white/20 to-white/10 text-white border-white/30'
+                          : 'text-gray-400 hover:text-white border-transparent'
                       }`}
                     >
                       Unwrap
@@ -298,35 +298,35 @@ export default function WrapPage() {
                           <h3 className="text-lg font-semibold text-white">Step 1: Create ERC-20 Wrapper</h3>
                           
                           <div>
-                            <label className="block text-sm text-gray-400 mb-2">Token ID</label>
+                            <label className="block text-sm text-gray-300 mb-2">Token ID</label>
                             <input
                               type="number"
                               value={tokenId}
                               onChange={(e) => setTokenId(e.target.value)}
                               placeholder="Enter ERC-1155 token ID"
-                              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                              className="w-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                             />
                           </div>
 
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm text-gray-400 mb-2">Wrapper Name</label>
+                              <label className="block text-sm text-gray-300 mb-2">Wrapper Name</label>
                               <input
                                 type="text"
                                 value={wrapperName}
                                 onChange={(e) => setWrapperName(e.target.value)}
                                 placeholder="e.g., Wrapped Carbon Credit"
-                                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                                className="w-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                               />
                             </div>
                             <div>
-                              <label className="block text-sm text-gray-400 mb-2">Wrapper Symbol</label>
+                              <label className="block text-sm text-gray-300 mb-2">Wrapper Symbol</label>
                               <input
                                 type="text"
                                 value={wrapperSymbol}
                                 onChange={(e) => setWrapperSymbol(e.target.value.toUpperCase())}
                                 placeholder="e.g., wCARBON"
-                                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                                className="w-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                               />
                             </div>
                           </div>
@@ -334,7 +334,7 @@ export default function WrapPage() {
                           <button
                             onClick={handleCreateWrapper}
                             disabled={loading || !tokenId || !wrapperName || !wrapperSymbol}
-                            className="w-full py-3 bg-gradient-to-r from-purple-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-3 bg-gradient-to-r from-[#374151] to-[#1F2937] hover:from-[#4B5563] hover:to-[#374151] text-white font-semibold rounded-xl transition-all border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                           >
                             {loading ? (
                               <>
@@ -356,15 +356,15 @@ export default function WrapPage() {
                         <div className="space-y-6">
                           {/* Balances */}
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
-                              <p className="text-sm text-gray-400">ERC-1155 Balance</p>
+                            <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-4 border border-white/20">
+                              <p className="text-sm text-gray-300">ERC-1155 Balance</p>
                               <p className="text-2xl font-bold text-white">{currentERC1155Balance}</p>
-                              <p className="text-xs text-gray-500">Token ID: {tokenId}</p>
+                              <p className="text-xs text-gray-400">Token ID: {tokenId}</p>
                             </div>
-                            <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
-                              <p className="text-sm text-gray-400">Wrapped ERC-20 Balance</p>
+                            <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-4 border border-white/20">
+                              <p className="text-sm text-gray-300">Wrapped ERC-20 Balance</p>
                               <p className="text-2xl font-bold text-white">{parseFloat(currentWrappedBalance).toFixed(2)}</p>
-                              <p className="text-xs text-gray-500 truncate">{currentWrapperAddress?.slice(0, 10)}...</p>
+                              <p className="text-xs text-gray-400 truncate">{currentWrapperAddress?.slice(0, 10)}...</p>
                             </div>
                           </div>
 
@@ -373,7 +373,7 @@ export default function WrapPage() {
                             <button
                               onClick={handleApprove}
                               disabled={loading}
-                              className="w-full py-3 bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 font-semibold rounded-xl hover:bg-yellow-500/30 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                              className="w-full py-3 bg-gradient-to-br from-white/20 to-white/10 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/15 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                               {loading ? (
                                 <>
@@ -391,23 +391,23 @@ export default function WrapPage() {
 
                           {/* Wrap Input */}
                           <div>
-                            <label className="block text-sm text-gray-400 mb-2">Amount to Wrap</label>
+                            <label className="block text-sm text-gray-300 mb-2">Amount to Wrap</label>
                             <div className="relative">
                               <input
                                 type="number"
                                 value={wrapAmount}
                                 onChange={(e) => setWrapAmount(e.target.value)}
                                 placeholder="Enter amount"
-                                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                                className="w-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                               />
                               <button
                                 onClick={() => setWrapAmount(currentERC1155Balance)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 text-sm hover:text-purple-300"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm hover:text-white"
                               >
                                 MAX
                               </button>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-400 mt-1">
                               1 ERC-1155 credit = 1 ERC-20 token (with 18 decimals)
                             </p>
                           </div>
@@ -415,7 +415,7 @@ export default function WrapPage() {
                           <button
                             onClick={handleWrap}
                             disabled={loading || !wrapAmount || parseInt(wrapAmount) > parseInt(currentERC1155Balance)}
-                            className="w-full py-3 bg-gradient-to-r from-purple-500 to-emerald-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-3 bg-gradient-to-r from-[#374151] to-[#1F2937] hover:from-[#4B5563] hover:to-[#374151] text-white font-semibold rounded-xl transition-all border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                           >
                             {loading ? (
                               <>
@@ -440,42 +440,42 @@ export default function WrapPage() {
                       {/* Select Wrapper */}
                       {!currentWrapperAddress ? (
                         <div className="text-center py-8">
-                          <ArrowDownUp className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                          <p className="text-gray-400">Select a wrapper from the sidebar or enter a token ID above</p>
+                          <ArrowDownUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-300">Select a wrapper from the sidebar or enter a token ID above</p>
                         </div>
                       ) : (
                         <>
                           {/* Balances */}
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
-                              <p className="text-sm text-gray-400">Wrapped ERC-20 Balance</p>
+                            <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-4 border border-white/20">
+                              <p className="text-sm text-gray-300">Wrapped ERC-20 Balance</p>
                               <p className="text-2xl font-bold text-white">{parseFloat(currentWrappedBalance).toFixed(2)}</p>
                             </div>
-                            <div className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
-                              <p className="text-sm text-gray-400">ERC-1155 Balance</p>
+                            <div className="bg-gradient-to-br from-white/10 to-white/5 rounded-xl p-4 border border-white/20">
+                              <p className="text-sm text-gray-300">ERC-1155 Balance</p>
                               <p className="text-2xl font-bold text-white">{currentERC1155Balance}</p>
                             </div>
                           </div>
 
                           {/* Unwrap Input */}
                           <div>
-                            <label className="block text-sm text-gray-400 mb-2">Amount to Unwrap</label>
+                            <label className="block text-sm text-gray-300 mb-2">Amount to Unwrap</label>
                             <div className="relative">
                               <input
                                 type="number"
                                 value={unwrapAmount}
                                 onChange={(e) => setUnwrapAmount(e.target.value)}
                                 placeholder="Enter amount (whole numbers)"
-                                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                                className="w-full bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-white/30"
                               />
                               <button
                                 onClick={() => setUnwrapAmount(Math.floor(parseFloat(currentWrappedBalance)).toString())}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-purple-400 text-sm hover:text-purple-300"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 text-sm hover:text-white"
                               >
                                 MAX
                               </button>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-400 mt-1">
                               Must be whole numbers (1 ERC-20 token = 1 ERC-1155 credit)
                             </p>
                           </div>
@@ -483,7 +483,7 @@ export default function WrapPage() {
                           <button
                             onClick={handleUnwrap}
                             disabled={loading || !unwrapAmount || parseFloat(unwrapAmount) > parseFloat(currentWrappedBalance)}
-                            className="w-full py-3 bg-gradient-to-r from-emerald-500 to-purple-500 text-white font-semibold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-3 bg-gradient-to-r from-[#374151] to-[#1F2937] hover:from-[#4B5563] hover:to-[#374151] text-white font-semibold rounded-xl transition-all border border-white/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                           >
                             {loading ? (
                               <>
@@ -504,13 +504,13 @@ export default function WrapPage() {
 
                   {/* Error Message */}
                   {error && (
-                    <div className="mt-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div className="mt-6 bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl p-4 flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-red-400">{error}</p>
+                        <p className="text-white">{error}</p>
                         <button 
                           onClick={clearError}
-                          className="text-red-400/70 text-sm hover:text-red-400 mt-1"
+                          className="text-white/70 text-sm hover:text-white mt-1"
                         >
                           Dismiss
                         </button>
@@ -520,15 +520,15 @@ export default function WrapPage() {
 
                   {/* Success Message */}
                   {txHash && !error && (
-                    <div className="mt-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <div className="mt-6 bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl p-4 flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <p className="text-emerald-400">Transaction successful!</p>
+                        <p className="text-white">Transaction successful!</p>
                         <a
                           href={`${CHAIN_CONFIG.blockExplorerUrls[0]}/tx/${txHash}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-emerald-400/70 text-sm hover:text-emerald-400 flex items-center gap-1 mt-1"
+                          className="text-white/70 text-sm hover:text-white flex items-center gap-1 mt-1"
                         >
                           View on Explorer <ExternalLink className="w-3 h-3" />
                         </a>
@@ -542,21 +542,21 @@ export default function WrapPage() {
 
           {/* Info Section */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-6">
+            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur border border-white/20 rounded-xl p-6">
               <h3 className="font-semibold text-white mb-2">📦 ERC-1155 → ERC-20</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-300">
                 Convert your green credits from ERC-1155 to ERC-20 format for use in DeFi protocols like AMMs.
               </p>
             </div>
-            <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-6">
+            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur border border-white/20 rounded-xl p-6">
               <h3 className="font-semibold text-white mb-2">🔄 1:1 Ratio</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-300">
                 Each ERC-1155 credit wraps into exactly 1 ERC-20 token (with 18 decimals for precision).
               </p>
             </div>
-            <div className="bg-slate-800/30 backdrop-blur border border-slate-700/50 rounded-xl p-6">
+            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur border border-white/20 rounded-xl p-6">
               <h3 className="font-semibold text-white mb-2">💱 Reversible</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-300">
                 You can unwrap your ERC-20 tokens back to ERC-1155 credits at any time.
               </p>
             </div>
