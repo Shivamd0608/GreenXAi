@@ -118,7 +118,7 @@ export default function Home() {
     const handleBuyOption = (option) => {
       setShowTradingModal(false);
       if (option === "amm") {
-        window.location.href = "/trade/amm";
+        window.location.href = "/amm";
       } else if (option === "orderbook") {
         window.location.href = "/marketplace?tab=buy";
       }
@@ -136,7 +136,7 @@ export default function Home() {
     const handleSellMethod = (method) => {
       setShowTradingModal(false);
       if (method === "amm") {
-        window.location.href = "/trade/amm";
+        window.location.href = "/amm";
       } else if (method === "orderbook") {
         window.location.href = "/marketplace?tab=sell";
       }

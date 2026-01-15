@@ -150,7 +150,7 @@ const OrderCard = ({ order, type, onFill, loading }) => {
 };
 
 export default function MarketplaceClient() {
-  const [tokenId, setTokenId] = useState(1);
+  const [tokenId, setTokenId] = useState(0);
   const [priceInput, setPriceInput] = useState("1");
   const [amountInput, setAmountInput] = useState("1");
   const [mUSDCDecimals] = useState(6);
