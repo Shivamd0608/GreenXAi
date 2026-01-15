@@ -1,8 +1,8 @@
-# GreenXAI AMM System (Uniswap V2 Style)
+# GreenAiDEX AMM System (Uniswap V2 Style)
 
 ## Overview
 
-The GreenXAI Automated Market Maker (AMM) enables permissionless, on-chain trading of tokenized green credits. It solves the liquidity fragmentation problem inherent in environmental asset markets by allowing any participant to provide liquidity and execute trades without relying on traditional market makers.
+The GreenAiDEX Automated Market Maker (AMM) enables permissionless, on-chain trading of tokenized green credits. It solves the liquidity fragmentation problem inherent in environmental asset markets by allowing any participant to provide liquidity and execute trades without relying on traditional market makers.
 
 The Uniswap V2 model was chosen for several reasons:
 
@@ -107,7 +107,7 @@ A 0.3% fee is applied to all swaps:
 
 ---
 
-## How GreenXAI Uses the AMM
+## How GreenAiDEX Uses the AMM
 
 ### ERC-20 Wrapped Green Credits
 

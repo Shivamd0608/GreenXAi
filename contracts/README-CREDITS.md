@@ -1,4 +1,4 @@
-# GreenXAI Credit Registration, Minting & Wrapping
+# GreenAiDEX Credit Registration, Minting & Wrapping
 
 ## Problem Being Solved
 

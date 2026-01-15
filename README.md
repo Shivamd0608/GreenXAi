@@ -1,6 +1,6 @@
-# 🌿 GreenXAI
+# 🌿 GreenAiDEX
 
-**GreenXAI** is an on-chain platform for **registering, tokenizing, and trading real-world environmental credits** in a transparent, secure, and accessible way.
+**GreenAiDEX** is an on-chain platform for **registering, tokenizing, and trading real-world environmental credits** in a transparent, secure, and accessible way.
 
 The platform supports **four types of environmental credits**:
 - 🌱 Green Credits  
@@ -8,9 +8,9 @@ The platform supports **four types of environmental credits**:
 - 🌍 Carbon Credits  
 - ⚡ Renewable Energy Credits  
 
-GreenXAI enables verified environmental projects to convert these credits into **ERC-1155 crypto assets**, trade them directly using **stablecoin settlement**, and optionally make them **DeFi-compatible** by wrapping them into **ERC-20 tokens tradable via a Uniswap V2–style AMM**.
+GreenAiDEX enables verified environmental projects to convert these credits into **ERC-1155 crypto assets**, trade them directly using **stablecoin settlement**, and optionally make them **DeFi-compatible** by wrapping them into **ERC-20 tokens tradable via a Uniswap V2–style AMM**.
 
-GreenXAI is designed to make **green credit markets more efficient, accessible, and trustable** for both small sustainability projects and large organizations.
+GreenAiDEX is designed to make **green credit markets more efficient, accessible, and trustable** for both small sustainability projects and large organizations.
 
 ---
 
@@ -28,9 +28,9 @@ As a result, green credits remain **illiquid, opaque, and difficult to trade**, 
 
 ---
 
-## ✅ GreenXAI Solution
+## ✅ GreenAiDEX Solution
 
-GreenXAI moves the **entire green credit lifecycle on-chain**, removing intermediaries and enabling open participation.
+GreenAiDEX moves the **entire green credit lifecycle on-chain**, removing intermediaries and enabling open participation.
 
 ### Core Benefits
 
@@ -105,12 +105,12 @@ Each credit has **full on-chain traceability** from issuance to retirement.
 
 ## 🧩 Full System Workflow
 
-![GreenXAI Workflow](./<your-image-name>.png)
+![GreenAiDEX Workflow](./<your-image-name>.png)
 
 
 ## 🔁 AMM vs Orderbook in GreenXchange
 
-GreenXAI uses **both an Orderbook and an AMM** to support different trading needs.
+GreenAiDEX uses **both an Orderbook and an AMM** to support different trading needs.
 
 ### 📊 Comparison Table
 
@@ -141,7 +141,7 @@ GreenXAI uses **both an Orderbook and an AMM** to support different trading need
 
 ## 🧠 AI Assistant Layer
 
-GreenXAI integrates an **AI-powered assistant** to improve usability and reduce user errors.
+GreenAiDEX integrates an **AI-powered assistant** to improve usability and reduce user errors.
 
 ### AI Capabilities
 
@@ -264,7 +264,7 @@ This helps users **understand trade quality before execution**.
 ## 🚀 Getting Started
 
 ```bash
-git clone https://github.com/Shivamd0608/GreenXAi.git
-cd GreenXAi/frontend
+git clone https://github.com/Shivamd0608/GreenAiDEX.git
+cd GreenAiDEX/frontend
 npm install
 npm run dev

@@ -1,4 +1,4 @@
-# GreenXAI Orderbook & Faucet
+# GreenAiDEX Orderbook & Faucet
 
 ## Why an Orderbook Exists
 
@@ -202,7 +202,7 @@ The faucet is intentionally in a separate contract (`MockUSDC`) that:
 
 ---
 
-## How Orderbook Fits GreenXAI
+## How Orderbook Fits GreenAiDEX
 
 ### Complements AMM
 
